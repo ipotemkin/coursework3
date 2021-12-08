@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
 from pydantic import BaseModel
@@ -8,6 +8,8 @@ from app.dependencies import get_db, jwt_decode
 from sqlalchemy.orm import Session
 
 from app.dependencies import oauth2_scheme
+
+from app.dao.model.users import UserBM
 
 
 # Models
@@ -84,3 +86,19 @@ async def refresh_tokens(body: RefreshTokensRequest, db: Session = Depends(get_d
                 )
 
     return UserService(db).refresh_jwt(body.refresh_token)
+
+
+@router.post('/register', status_code=status.HTTP_201_CREATED, summary='Добавить пользователя',
+             response_description="The created item")
+async def users_post(user: UserBM, response: Response, db: Session = Depends(get_db)):
+    """
+    Добавить пользователя:
+
+    - **id**: ID пользователя - целое число (необязательный параметр)
+    - **name**: имя пользователя (обязательный параметр)
+    - **role**: роль пользователя
+    - **password**: пароль пользователя
+    """
+    new_obj = UserService(db).create(user.dict())
+    response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
+    return new_obj
