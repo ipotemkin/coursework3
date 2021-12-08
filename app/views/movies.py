@@ -12,6 +12,7 @@ async def movies_get_all(director_id: int = None,
                          genre_id: int = None,
                          year: int = None,
                          page: int = None,
+                         state: str = None,
                          db: Session = Depends(get_db)):
     """
     Получить все фильмы
@@ -24,9 +25,9 @@ async def movies_get_all(director_id: int = None,
     if year:
         query_d['year'] = year
     if query_d:
-        return MovieService(db).get_all_by_filter(query_d, page=page)
+        return MovieService(db).get_all_by_filter(query_d, page=page, state=state)
 
-    return MovieService(db).get_all(page=page)
+    return MovieService(db).get_all(page=page, state=state)
 
 
 @router.get('/{pk}', summary='Получить фильм по ID')
