@@ -13,7 +13,7 @@ class User(Base):
     email = Column(String)  # , unique=True, index=True, nullable=False)
     name = Column(String(100))  # , nullable=False)
     surname = Column(String(100))  # , nullable=False)
-    favorite_genre = Column(Integer)  # , ForeignKey('genre.id'))
+    favorite_genre = Column(Integer, ForeignKey('genre.id'))
 
     def __repr__(self):
         return f"<User: id={self.id}, username={self.username}, role={self.role}>"
