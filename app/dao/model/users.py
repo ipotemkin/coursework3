@@ -10,9 +10,9 @@ class User(Base):
     username = Column(String, unique=True, nullable=False)  # to be deprecated for email
     password = Column(String)  # a hashed password
     role = Column(String)  # to be deprecated
-    email = Column(String, unique=True, index=True, nullable=False)
-    name = Column(String(100), nullable=False)
-    surname = Column(String(100), nullable=False)
+    email = Column(String)  # , unique=True, index=True, nullable=False)
+    name = Column(String(100))  # , nullable=False)
+    surname = Column(String(100))  # , nullable=False)
 
     def __repr__(self):
         return f"<User: id={self.id}, username={self.username}, role={self.role}>"
@@ -22,9 +22,9 @@ class UserBase(BaseModel):
     username: str
     password: Optional[str]
     role: str
-    email: EmailStr
-    name: str
-    surname: str
+    email: Optional[EmailStr]
+    name: Optional[str]
+    surname: Optional[str]
 
     class Config:
         orm_mode = True

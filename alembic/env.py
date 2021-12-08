@@ -22,7 +22,7 @@ fileConfig(config.config_file_name)
 from app.dao.model import directors, genres, movies, users, rtokens
 from app.dao.model.base import Base
 target_metadata = Base.metadata
-print(target_metadata.__dict__)
+# print(target_metadata.__dict__)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
