@@ -7,7 +7,7 @@ from uvicorn import run
 
 from app.utils import get_one
 from app.errors import NotFoundError, NoContentError, ValidationError, DatabaseError, BadRequestError
-from app.views import directors, genres, movies, users, auth, tokens
+from app.views import directors, genres, movies, users, auth, tokens, favorites
 from databases import Database
 
 from app.dependencies import del_expired_tokens
@@ -44,6 +44,10 @@ tags_metadata = [
         'name': 'tokens',
         'description': 'Операции с базой токенов (тест)',
     },
+    {
+        'name': 'favorites',
+        'description': 'Операции с записями юзер–любимый фильм (тест)',
+    },
     # {
     #     'name': 'docs',
     #     'description': 'Документация',
@@ -63,6 +67,7 @@ app.include_router(genres.router)
 app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(tokens.router)
+app.include_router(favorites.router)
 
 
 @app.on_event("startup")
