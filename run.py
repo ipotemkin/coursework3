@@ -14,6 +14,7 @@ from app.dependencies import del_expired_tokens
 from fastapi_utils.tasks import repeat_every
 import datetime
 
+from fastapi.middleware.cors import CORSMiddleware
 
 tags_metadata = [
     {
@@ -60,6 +61,22 @@ app = FastAPI(title='Movies API on FastAPI',
               version='1.0.0',
               openapi_tags=tags_metadata,
               docs_url='/')
+
+origins = [
+    # "http://domainname.com",
+    # "https://domainname.com",
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(movies.router)
 app.include_router(directors.router)

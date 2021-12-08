@@ -7,7 +7,7 @@ from sqlalchemy import desc
 
 class MovieDAO(BasicDAO):
     def __init__(self, session, model=Movie, schema=MovieBMSimple, nested_schema=MovieBM):
-        super().__init__(session, model, schema)  # , nested_schema)
+        super().__init__(session, model, schema, nested_schema)
 
     def get_all(self, raise_errors=True, page=None, limit=ITEMS_ON_PAGE, state=None):
         start_at = 0
