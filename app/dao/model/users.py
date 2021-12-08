@@ -7,7 +7,7 @@ from app.dao.model.base import Base
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True, nullable=False)  # to be deprecated for email
+    username = Column(String, nullable=True)  # to be deprecated for email
     password = Column(String)  # a hashed password
     role = Column(String)  # to be deprecated
     email = Column(String)  # , unique=True, index=True, nullable=False)
@@ -20,10 +20,10 @@ class User(Base):
 
 
 class UserBase(BaseModel):
-    username: str
+    username: Optional[str]
     password: Optional[str]
-    role: str
-    email: Optional[EmailStr]
+    role: Optional[str]
+    email: EmailStr
     name: Optional[str]
     surname: Optional[str]
     favorite_genre: Optional[int]
