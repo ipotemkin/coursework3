@@ -120,3 +120,13 @@ class UserService(BasicService):
         if ('password' in new_obj) and new_obj['password'] is not None:
             new_obj['password'] = self.get_hash(new_obj['password'])
         super().update(new_obj, uid)
+
+    def update_password(self, pk, old_password: str, new_password: str):
+        user = self.dao.get_one(pk)
+        if not self.check_password_with_hash(old_password, user.get('password')):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f'Incorrect password',
+                # headers={"WWW-Authenticate": "Bearer"},
+            )
+        self.update({'password': new_password}, pk)

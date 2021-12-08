@@ -63,3 +63,17 @@ async def users_delete(pk: int, db: Session = Depends(get_db)):
     Удалить запись пользователя с указанным ID:
     """
     UserService(db).delete(pk)
+
+
+@router.put('/password/{pk}',
+              # status_code=status.HTTP_204_NO_CONTENT,
+              summary='Обновить пароль пользователя с указанным ID',
+              dependencies=[Depends(valid_admin_token)])
+async def users_update_password(pk: int, old_password: str, new_password: str, db: Session = Depends(get_db)):
+    """
+    Обновить пароль пользователя с указанным ID:
+
+    - **old_password**: старый пароль пользователя
+    - **new_password**: новый пароль пользователя
+    """
+    return UserService(db).update_password(pk, old_password, new_password)
