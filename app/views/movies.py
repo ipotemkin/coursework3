@@ -4,7 +4,9 @@ from app.service.movies import MovieService
 from app.dependencies import get_db, valid_token, valid_admin_token
 from sqlalchemy.orm import Session
 
-router = APIRouter(prefix='/movies', tags=['movies'], dependencies=[Depends(valid_token)])
+router = APIRouter(prefix='/movies', tags=['movies'],
+                   # dependencies=[Depends(valid_token)]
+                   )
 
 
 @router.get('', summary='Получить все фильмы')
