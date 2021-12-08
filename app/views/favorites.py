@@ -1,7 +1,8 @@
 from fastapi import APIRouter, status, Response, Depends
 from app.dao.model.favotites import FavoriteMovieBM
 from app.service.favorites import FavoriteMovieService
-from app.dependencies import get_db
+from app.service.users import UserService
+from app.dependencies import get_db, valid_token
 from sqlalchemy.orm import Session
 
 
@@ -39,6 +40,57 @@ async def favorites_post(record: FavoriteMovieBM, response: Response, db: Sessio
     new_obj = FavoriteMovieService(db).create(record.dict())
     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
     return new_obj
+
+
+# @router.post('', status_code=status.HTTP_201_CREATED, summary='Добавить запись юзер–любимый фильм',
+#              response_description="The created item")
+# async def favorites_post(record: FavoriteMovieBM, response: Response, db: Session = Depends(get_db)):
+#     """
+#     Добавить запись юзер–любимый фильм:
+#
+#     - **id**: ID жанра - целое число (необязательный параметр)
+#     - **user_id**: ID пользователя (обязательный параметр)
+#     - **movie_id**: ID фильма (обязательный параметр)
+#     """
+#     new_obj = FavoriteMovieService(db).create(record.dict())
+#     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
+#     return new_obj
+
+@router.post('/movies/{movie_id}', status_code=status.HTTP_201_CREATED,
+             summary='Добавить любимый фильм к текущему пользователю',
+             response_description="The created item",
+             # dependencies=[Depends(valid_token())]
+             )
+async def favorites_post(movie_id: int,
+                         response: Response,
+                         db: Session = Depends(get_db),
+                         decoded_token=Depends(valid_token)):
+    """
+    Добавить любимый фильм к текущему пользователю:
+
+    - **id**: ID жанра - целое число (необязательный параметр)
+    - **movie_id**: ID фильма (обязательный параметр)
+    """
+    user_id = UserService(db).get_all_by_filter({'username': decoded_token.get('username')})[0].get('id')
+    new_obj = FavoriteMovieService(db).create({'user_id': user_id, 'movie_id': movie_id})
+    response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
+    return new_obj
+
+
+@router.delete('/movies/{movie_id}', status_code=status.HTTP_200_OK,
+               summary='Удалить запись о жанре с указанным ID')
+async def genres_delete(movie_id: int,
+                        db: Session = Depends(get_db),
+                        decoded_token=Depends(valid_token)
+                        ):
+    """
+    Удалить запись о жанре с указанным ID:
+    """
+    user_id = UserService(db).get_all_by_filter({'username': decoded_token.get('username')})[0].get('id')
+    favorite_id = FavoriteMovieService(db).get_all_by_filter({'user_id': user_id, 'movie_id': movie_id})[0].get('id')
+    FavoriteMovieService(db).delete(favorite_id)
+    # return None
+
 
 
 # @router.patch('/{pk}',
