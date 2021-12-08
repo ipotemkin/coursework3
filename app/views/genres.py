@@ -9,11 +9,11 @@ router = APIRouter(prefix='/genres', tags=['genres'])
 
 
 @router.get('', summary='Получить все жанры')
-async def genres_get_all(db: Session = Depends(get_db)):
+async def genres_get_all(page: int = None, db: Session = Depends(get_db)):
     """
     Получить все жанры
     """
-    return GenreService(db).get_all()
+    return GenreService(db).get_all(page=page)
 
 
 @router.get('/{pk}', summary='Получить жанр по его ID')

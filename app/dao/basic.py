@@ -1,4 +1,5 @@
 from app.errors import NotFoundError, NoContentError, BadRequestError, DatabaseError, ValidationError
+from app.constants import ITEMS_ON_PAGE
 
 
 class BasicDAO:
@@ -8,8 +9,14 @@ class BasicDAO:
         self.schema = schema  # if validation needed while creating/updating a record
         self.nested_schema = nested_schema if nested_schema else schema
 
-    def get_all(self, raise_errors=True):
-        objs = self.session.query(self.model).all()
+    def get_all(self, raise_errors=True, page=None, limit=ITEMS_ON_PAGE):
+        start_at = 0
+        if page is None:
+            limit = None
+        else:
+            start_at = (page - 1) * limit
+
+        objs = self.session.query(self.model).offset(start_at).limit(limit).all()
         if raise_errors and not objs:
             raise NotFoundError
         return [self.nested_schema.from_orm(obj).dict() for obj in objs]
@@ -76,7 +83,21 @@ class BasicDAO:
         except Exception:
             raise DatabaseError
 
-    def get_all_by_filter(self, req: dict):
-        if not (res := self.session.query(self.model).filter_by(**req).all() if req else self.model.query.all()):
+    def get_all_by_filter(self, req: dict, page=None, limit=ITEMS_ON_PAGE):
+        start_at = 0
+        if page is None:
+            limit = None
+        else:
+            start_at = (page - 1) * limit
+
+        if req:
+            res = self.session.query(self.model).filter_by(**req).limit(limit).offset(start_at).all()
+        else:
+            res = self.model.query.offest(start_at).limit(limit).all()
+
+        if not res:
             raise NotFoundError
+
+        # if not (res := self.session.query(self.model).filter_by(**req).offest(start_at).limit(limit).all() if req else self.model.query.all()):
+        #     raise NotFoundError
         return [self.nested_schema.from_orm(obj).dict() for obj in res]

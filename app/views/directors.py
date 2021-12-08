@@ -9,13 +9,13 @@ router = APIRouter(prefix='/directors', tags=['directors'])
 
 
 @router.get('', summary='Получить всех режиссеров')
-async def directors_get_all(db: Session = Depends(get_db)):
+async def directors_get_all(page: int = None, db: Session = Depends(get_db)):
     """
     Получить всех режиссеров
     """
     # t0 = time.perf_counter()
     # res = director_service.get_all()
-    res = DirectorService(session=db).get_all()
+    res = DirectorService(session=db).get_all(page=page)
     # elapsed = time.perf_counter() - t0
     # print('with sqlalchemy [%0.8fs]' % elapsed)
     return res
