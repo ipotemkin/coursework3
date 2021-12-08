@@ -1,3 +1,4 @@
+#  TODO: this revision failed to update DB
 """added a foreign key constraint to user.favorite_genre
 
 Revision ID: bef0270b48ce
