@@ -1,5 +1,5 @@
 from app.dao.model.base import Base
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 from sqlalchemy import Column, Integer, String
 
@@ -16,3 +16,24 @@ class RTokenBM(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class TokenRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+    class Config:
+        orm_mode = True
+
+
+class RefreshTokensRequest(BaseModel):
+    refresh_token: str

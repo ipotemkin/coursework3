@@ -1,8 +1,6 @@
 from fastapi import APIRouter, status, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from pydantic import BaseModel, EmailStr
-
 from app.service.users import UserService
 from app.dependencies import get_db, jwt_decode
 from sqlalchemy.orm import Session
@@ -10,36 +8,7 @@ from sqlalchemy.orm import Session
 from app.dependencies import oauth2_scheme
 
 from app.dao.model.users import UserBM
-
-
-# Models
-class TokenRequest(BaseModel):
-    email: str
-    password: str
-
-    class Config:
-        orm_mode = True
-
-
-class TokenResponse(BaseModel):
-    access_token: str
-    refresh_token: str
-    token_type: str
-
-    class Config:
-        orm_mode = True
-
-
-class RefreshTokensRequest(BaseModel):
-    refresh_token: str
-
-
-class LoginUser(BaseModel):
-    email: EmailStr
-    password: str
-
-    class Config:
-        orm_mode = True
+from app.dao.model.rtokens import TokenRequest, TokenResponse, RefreshTokensRequest
 
 
 router = APIRouter(prefix='/auth', tags=['auth'])
@@ -84,7 +53,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.post('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse, summary='Получить токены')
-async def login_for_access_token(login_user: LoginUser, db: Session = Depends(get_db)):
+async def login_for_access_token(login_user: TokenRequest, db: Session = Depends(get_db)):
     """
     Получить токены / Generate tokens
     """

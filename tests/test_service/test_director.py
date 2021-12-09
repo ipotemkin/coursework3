@@ -18,7 +18,8 @@ def test_director_service_get_one():
     with patch('app.service.directors.DirectorDAO') as mock:
         instance = mock.return_value
         instance.get_one.return_value = Director(id=1, name='Spillberg')
-        assert DirectorService(get_db()).get_one(1) == Director(id=1, name='Spillberg')
+        res = DirectorService(get_db()).get_one(1)
+        assert res == Director(id=1, name='Spillberg')
 
 
 
