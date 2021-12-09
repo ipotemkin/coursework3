@@ -9,6 +9,7 @@ router = APIRouter(prefix='/directors', tags=['directors'])
 
 
 @router.get('', summary='Получить всех режиссеров')
+@router.get('/', include_in_schema=False)
 async def directors_get_all(page: int = None, db: Session = Depends(get_db)):
     """
     Получить всех режиссеров
