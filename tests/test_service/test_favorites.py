@@ -126,4 +126,13 @@ class TestFavoriteMovieService:
         assert FavoriteMovieService(db_session).part_update() is None
 
     def test_get_all_by_user(self, db_session, favorite_movie):
-        assert FavoriteMovieService(db_session).get_all_by_user(user_id=2) == [MovieBMSimple().from_orm(movie).dict()]
+        assert FavoriteMovieService(db_session).get_all_by_user(user_id=2) == [
+            MovieBMSimple.from_orm(movie).dict()]
+
+    def test_get_all_by_user_with_page(self, db_session, favorite_movie):
+        assert FavoriteMovieService(db_session).get_all_by_user(user_id=2, page=1) == [
+            MovieBMSimple.from_orm(movie).dict()]
+
+    # def test_get_all_not_found(self, db_session):
+    #     with pytest.raises(NotFoundError):
+    #         assert FavoriteMovieService(db_session).get_all() == []

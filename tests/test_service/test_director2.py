@@ -104,9 +104,6 @@ class TestDirectorService:
         assert DirectorService(db_session).delete(1) is None
 
     def test_all_by_filter_with_mock(self, db_session, dao):
-        # temp = []
-        # for item in directors_ld:
-        #     temp.append(DirectorBM.from_orm(Director(**item)).dict())
         dao().get_all_by_filter.return_value = [{'id': 1, 'name': 'Spillberg'}]
 
         assert DirectorService(db_session).get_all_by_filter({'id': 1}) == [{'id': 1, 'name': 'Spillberg'}]
