@@ -1,10 +1,7 @@
 from unittest.mock import Mock, patch
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-from app.dao.model.base import Base
 from app.dao.model.directors import Director, DirectorBM
 from app.errors import NotFoundError
 from app.service.directors import DirectorService
@@ -26,19 +23,19 @@ directors_ld = [
 
 
 class TestDirectorService:
-    engine = create_engine('sqlite:///:memory:', echo=True)
+    # engine = create_engine('sqlite:///:memory:', echo=True)
 
-    @pytest.fixture(scope='session')
-    def db_migration(self):
-        with self.engine.begin() as conn:
-            Base.metadata.drop_all(conn)
-            Base.metadata.create_all(conn)
-
-    @pytest.fixture
-    def db_session(self, db_migration):
-        with sessionmaker(autocommit=False, autoflush=False, bind=self.engine)() as db_session:
-            yield db_session
-            db_session.rollback()
+    # @pytest.fixture(scope='session')
+    # def db_migration(self):
+    #     with self.engine.begin() as conn:
+    #         Base.metadata.drop_all(conn)
+    #         Base.metadata.create_all(conn)
+    #
+    # @pytest.fixture
+    # def db_session(self, db_migration):
+    #     with sessionmaker(autocommit=False, autoflush=False, bind=self.engine)() as db_session:
+    #         yield db_session
+    #         db_session.rollback()
 
     @pytest.fixture
     def director(self, db_session):
@@ -85,7 +82,7 @@ class TestDirectorService:
 
     def test_get_all_not_found(self, db_session):
         with pytest.raises(NotFoundError):
-            DirectorService(db_session).get_all()
+            assert DirectorService(db_session).get_all() == []
 
     def test_create_with_mock(self, db_session, dao):
         director = Director(id=4, name='Spillberg')
@@ -107,9 +104,9 @@ class TestDirectorService:
         assert DirectorService(db_session).delete(1) is None
 
     def test_all_by_filter_with_mock(self, db_session, dao):
-        temp = []
-        for item in directors_ld:
-            temp.append(DirectorBM.from_orm(Director(**item)).dict())
+        # temp = []
+        # for item in directors_ld:
+        #     temp.append(DirectorBM.from_orm(Director(**item)).dict())
         dao().get_all_by_filter.return_value = [{'id': 1, 'name': 'Spillberg'}]
 
         assert DirectorService(db_session).get_all_by_filter({'id': 1}) == [{'id': 1, 'name': 'Spillberg'}]
