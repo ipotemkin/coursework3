@@ -1,7 +1,8 @@
 from fastapi import APIRouter, status, Response, Depends
 from app.dao.model.genres import GenreBM, GenreUpdateBM
 from app.service.genres import GenreService
-from app.dependencies import get_db
+from app.service.users import UserService
+from app.dependencies import get_db, valid_token
 from sqlalchemy.orm import Session
 
 
@@ -9,11 +10,16 @@ router = APIRouter(prefix='/genres', tags=['genres'])
 
 
 @router.get('', summary='Получить все жанры')
-async def genres_get_all(page: int = None, db: Session = Depends(get_db)):
+@router.get('/', summary='Получить все жанры', include_in_schema=False)
+async def genres_get_all(page: int = None, db: Session = Depends(get_db),
+                         # decoded_token=Depends(valid_token)
+                         ):
     """
     Получить все жанры
     """
     return GenreService(db).get_all(page=page)
+    # genre_id = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('favorite_genre')
+    # return GenreService(db).get_one(genre_id)
 
 
 @router.get('/{pk}', summary='Получить жанр по его ID')

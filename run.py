@@ -7,7 +7,7 @@ from uvicorn import run
 
 from app.utils import get_one
 from app.errors import NotFoundError, NoContentError, ValidationError, DatabaseError, BadRequestError
-from app.views import directors, genres, movies, users, auth, tokens, favorites
+from app.views import directors, genres, movies, users, auth, tokens, favorites, genre
 from databases import Database
 
 from app.dependencies import del_expired_tokens
@@ -85,6 +85,7 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(tokens.router)
 app.include_router(favorites.router)
+app.include_router(genre.router)
 
 
 @app.on_event("startup")

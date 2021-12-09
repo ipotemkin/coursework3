@@ -18,7 +18,7 @@ from app.service.rtokens import RTokenService
 
 
 class UserForTokenModel(BaseModel):
-    username: str
+    email: str
     role: str
 
     class Config:
@@ -90,7 +90,7 @@ class UserService(BasicService):
         data = jwt.decode(refresh_token, JWT_KEY, JWT_METHOD)
         return self.gen_jwt(data)
 
-    def check_password(self, username: str, password: str) -> bool:
+    def check_password(self, email: str, password: str) -> bool:
         """
         Checks a user's password
         :param username: user name
@@ -98,7 +98,7 @@ class UserService(BasicService):
         :return: True or False
         """
         password_hash = self.get_hash(password)
-        user_password = self.dao.get_all_by_filter({'username': username})[0]['password']
+        user_password = self.dao.get_all_by_filter({'email': email})[0]['password']
         return hmac.compare_digest(password_hash.encode('utf-8'), user_password.encode('utf-8'))
 
     def check_password_with_hash(self, user_password: str, password_hash: str) -> bool:

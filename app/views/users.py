@@ -3,16 +3,29 @@ from app.dao.model.users import UserBM, UserUpdateBM
 from app.service.users import UserService
 from app.dependencies import get_db, valid_token, valid_admin_token
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 
-router = APIRouter(prefix='/users', tags=['users'], dependencies=[Depends(valid_token)])
+router = APIRouter(prefix='/user', tags=['users'],
+                   # dependencies=[Depends(valid_token)]
+                   )
 
 
-@router.get('', summary='Получить всех пользователей')
-async def users_get_all(db: Session = Depends(get_db)):
+class PasswordChange(BaseModel):
+    password_1: str
+    password_2: str
+
+    class Config:
+        orm_mode = True
+
+
+@router.get('', summary='Получить текущего пользователя')
+@router.get('/', include_in_schema=False)
+async def users_current_user(db: Session = Depends(get_db), decoded_token=Depends(valid_token)):
     """
-    Получить всех пользователей
+    Получить текущего пользователя
     """
-    res = UserService(session=db).get_all()
+    pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    res = UserService(session=db).get_one(pk)
     return res
 
 
@@ -39,13 +52,40 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
     """
     new_obj = UserService(db).create(user.dict())
     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
-    return []
+    return new_obj
+
+
+@router.patch('',
+              # status_code=status.HTTP_204_NO_CONTENT,
+              summary='Изменить запись текущего пользователя',
+              # dependencies=[Depends(valid_admin_token)]
+              )
+@router.patch('/',
+              # status_code=status.HTTP_204_NO_CONTENT,
+              summary='Изменить запись текущего пользователя',
+              # dependencies=[Depends(valid_admin_token)],
+              include_in_schema=False
+              )
+async def current_user_update(user: UserUpdateBM,
+                              db: Session = Depends(get_db),
+                              decoded_token=Depends(valid_token)
+                              ):
+    """
+    Изменить запись текущего пользователя:
+
+    - **name**: изменить имя пользователя
+    - **role**: изменить роль пользователя
+    - **password**: изменить пароль пользователя
+    """
+    pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    return UserService(db).update(user.dict(), pk)
 
 
 @router.patch('/{pk}',
               # status_code=status.HTTP_204_NO_CONTENT,
               summary='Изменить запись пользователя с указанным ID',
-              dependencies=[Depends(valid_admin_token)])
+              # dependencies=[Depends(valid_admin_token)]
+              )
 async def users_update(user: UserUpdateBM, pk: int, db: Session = Depends(get_db)):
     """
     Изменить запись пользователя с указанным ID:
@@ -57,23 +97,26 @@ async def users_update(user: UserUpdateBM, pk: int, db: Session = Depends(get_db
     return UserService(db).update(user.dict(), pk)
 
 
+@router.put('/password',
+              # status_code=status.HTTP_204_NO_CONTENT,
+              summary='Обновить пароль пользователя с указанным ID',
+              # dependencies=[Depends(valid_admin_token)]
+            )
+async def users_update_password(body: PasswordChange, db: Session = Depends(get_db),
+                                decoded_token=Depends(valid_token)):
+    """
+    Обновить пароль пользователя с указанным ID:
+
+    - **password_1**: старый пароль пользователя
+    - **password_2**: новый пароль пользователя
+    """
+    pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    return UserService(db).update_password(pk, body.password_1, body.password_2)
+
+
 @router.delete('/{pk}', status_code=status.HTTP_200_OK, summary='Удалить запись пользователя с указанным ID')
 async def users_delete(pk: int, db: Session = Depends(get_db)):
     """
     Удалить запись пользователя с указанным ID:
     """
     UserService(db).delete(pk)
-
-
-@router.put('/password/{pk}',
-              # status_code=status.HTTP_204_NO_CONTENT,
-              summary='Обновить пароль пользователя с указанным ID',
-              dependencies=[Depends(valid_admin_token)])
-async def users_update_password(pk: int, old_password: str, new_password: str, db: Session = Depends(get_db)):
-    """
-    Обновить пароль пользователя с указанным ID:
-
-    - **old_password**: старый пароль пользователя
-    - **new_password**: новый пароль пользователя
-    """
-    return UserService(db).update_password(pk, old_password, new_password)

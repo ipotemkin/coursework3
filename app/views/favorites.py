@@ -9,12 +9,17 @@ from sqlalchemy.orm import Session
 router = APIRouter(prefix='/favorites', tags=['favorites'])
 
 
-@router.get('/movies', summary='Получить все записи пользователей - любимых фильмов')
-async def favorites_get_all(page: int = None, db: Session = Depends(get_db)):
+@router.get('/movies/', include_in_schema=False)
+@router.get('/movies', summary='Получить любимые фильмы текущего пользователя')
+async def favorites_get_all(page: int = None,
+                            db: Session = Depends(get_db),
+                            decoded_token=Depends(valid_token)):
     """
-    Получить все записи пользователей - любимых фильмов
+    Получить любимые фильмы текущего пользователя
     """
-    return FavoriteMovieService(db).get_all(page=page)
+    user_id = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    return FavoriteMovieService(db).get_all_by_user(user_id)
+    # return FavoriteMovieService(db).get_all(page=page)
 
 
 # @router.get('/movies/{pk}', summary='Получить жанр по его ID')
@@ -71,7 +76,7 @@ async def favorites_post(movie_id: int,
     - **id**: ID жанра - целое число (необязательный параметр)
     - **movie_id**: ID фильма (обязательный параметр)
     """
-    user_id = UserService(db).get_all_by_filter({'username': decoded_token.get('username')})[0].get('id')
+    user_id = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
     new_obj = FavoriteMovieService(db).create({'user_id': user_id, 'movie_id': movie_id})
     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
     return new_obj
@@ -86,7 +91,7 @@ async def genres_delete(movie_id: int,
     """
     Удалить запись о жанре с указанным ID:
     """
-    user_id = UserService(db).get_all_by_filter({'username': decoded_token.get('username')})[0].get('id')
+    user_id = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
     favorite_id = FavoriteMovieService(db).get_all_by_filter({'user_id': user_id, 'movie_id': movie_id})[0].get('id')
     FavoriteMovieService(db).delete(favorite_id)
     # return None

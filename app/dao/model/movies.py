@@ -46,3 +46,16 @@ class MovieBM(MovieBMSimple):
     # pass
     director: DirectorBM
     genre: GenreBM
+
+
+# class FavoriteMovieBM(BaseModel):
+#     description: str
+#     director_id: int
+#     genre_id: int
+#     rating: float
+#     title: str
+#     trailer: Optional[str]
+#     year: int
+#
+#     class Config:
+#         orm_mode = True

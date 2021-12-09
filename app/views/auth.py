@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 from app.service.users import UserService
 from app.dependencies import get_db, jwt_decode
@@ -14,7 +14,7 @@ from app.dao.model.users import UserBM
 
 # Models
 class TokenRequest(BaseModel):
-    username: str
+    email: str
     password: str
 
     class Config:
@@ -34,11 +34,19 @@ class RefreshTokensRequest(BaseModel):
     refresh_token: str
 
 
+class LoginUser(BaseModel):
+    email: EmailStr
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
 router = APIRouter(prefix='/auth', tags=['auth'])
 
 
-def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
-    user = UserService(db).get_all_by_filter({'username': username})[0]
+def authenticate_user(email: str, password: str, db: Session = Depends(get_db)):
+    user = UserService(db).get_all_by_filter({'email': email})[0]
     if not user:
         return False
 
@@ -64,13 +72,24 @@ def decoded_jwt(token: str = Depends(oauth2_scheme)):
     return jwt_decode(token)
 
 
-@router.post('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse, summary='Получить токены')
+# authentication via Swagger using OAuth2 form
+@router.post('/login_oauth2', status_code=status.HTTP_201_CREATED, response_model=TokenResponse,
+             summary='Получить токены')
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """
     Получить токены / Generate tokens
     """
     user = authenticate_user(form_data.username, form_data.password, db)
-    return UserService(db).gen_jwt({'username': user['username'], 'role': user['role']})
+    return UserService(db).gen_jwt({'email': user['email'], 'role': user['role']})
+
+
+@router.post('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse, summary='Получить токены')
+async def login_for_access_token(login_user: LoginUser, db: Session = Depends(get_db)):
+    """
+    Получить токены / Generate tokens
+    """
+    user = authenticate_user(login_user.email, login_user.password, db)
+    return UserService(db).gen_jwt({'email': user['email'], 'role': user['role']})
 
 
 @router.put('/login', status_code=status.HTTP_201_CREATED, response_model=TokenResponse, summary='Обновить токены')

@@ -5,7 +5,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent
 
 engine = create_engine(f"sqlite:///{BASE_DIR.parent}/movies.db",
-                       connect_args={'check_same_thread': False})
+                       connect_args={'check_same_thread': False},
+                       echo=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
