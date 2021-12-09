@@ -37,9 +37,9 @@ def authenticate_user(email: str, password: str, db: Session = Depends(get_db)):
     return user
 
 
-def decoded_jwt(token: str = Depends(oauth2_scheme)):
-    return jwt_decode(token)
-
+# def decoded_jwt(token: str = Depends(oauth2_scheme)):
+#     return jwt_decode(token)
+#
 
 # authentication via Swagger using OAuth2 form
 @router.post('/login_oauth2', status_code=status.HTTP_201_CREATED, response_model=TokenResponse,

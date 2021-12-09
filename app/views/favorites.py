@@ -2,23 +2,34 @@ from fastapi import APIRouter, status, Response, Depends
 from app.dao.model.favotites import FavoriteMovieBM
 from app.service.favorites import FavoriteMovieService
 from app.service.users import UserService
-from app.dependencies import get_db, valid_token
+from app.dependencies import get_db, valid_token, get_current_user
 from sqlalchemy.orm import Session
-
+from app.dao.model.users import UserInDB
 
 router = APIRouter(prefix='/favorites', tags=['favorites'])
 
+
+# @router.get('/movies/', include_in_schema=False)
+# @router.get('/movies', summary='Получить любимые фильмы текущего пользователя')
+# async def favorites_get_all(page: int = None,
+#                             db: Session = Depends(get_db),
+#                             decoded_token=Depends(valid_token)):
+#     """
+#     Получить любимые фильмы текущего пользователя
+#     """
+#     user_id = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+#     return FavoriteMovieService(db).get_all_by_user(user_id)
+#     # return FavoriteMovieService(db).get_all(page=page)
 
 @router.get('/movies/', include_in_schema=False)
 @router.get('/movies', summary='Получить любимые фильмы текущего пользователя')
 async def favorites_get_all(page: int = None,
                             db: Session = Depends(get_db),
-                            decoded_token=Depends(valid_token)):
+                            user: UserInDB = Depends(get_current_user)):
     """
     Получить любимые фильмы текущего пользователя
     """
-    user_id = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
-    return FavoriteMovieService(db).get_all_by_user(user_id)
+    return FavoriteMovieService(db).get_all_by_user(user.get('id'), page=page)
     # return FavoriteMovieService(db).get_all(page=page)
 
 

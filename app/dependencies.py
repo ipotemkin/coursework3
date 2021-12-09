@@ -4,6 +4,8 @@ import jwt
 from app.constants import JWT_KEY, JWT_METHOD
 from fastapi import HTTPException, status, Depends
 from app.service.rtokens import RTokenService
+from sqlalchemy.orm import Session
+from app.service.users import UserService
 
 
 # Dependency
@@ -40,8 +42,7 @@ def valid_token(token: str = Depends(oauth2_scheme)):
 
 # use it as dependency when admin authorization required
 def valid_admin_token(token: str = Depends(oauth2_scheme)):
-    decoded_jwt = jwt_decode(token)
-    role = decoded_jwt.get('role')
+    role = jwt_decode(token).get('role')
     if role != 'admin':
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -49,6 +50,10 @@ def valid_admin_token(token: str = Depends(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     return True
+
+
+def get_current_user(token=Depends(valid_token), db: Session = Depends(get_db)):
+    return UserService(db).get_all_by_filter({'email': token.get('email')})[0]
 
 
 def del_expired_tokens():

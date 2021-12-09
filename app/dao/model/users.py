@@ -39,6 +39,10 @@ class UserBM(UserBase):
     # favorite_genre: Optional[GenreBM]
 
 
+class UserInDB(UserBase):
+    id: int
+
+
 class UserUpdateBM(UserBase):
     # username: Optional[str]
     password: Optional[str]
