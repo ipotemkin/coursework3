@@ -2,13 +2,11 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from sqlalchemy import Column, Integer, String, ForeignKey
 from app.dao.model.base import Base
-from app.dao.model.genres import GenreBM
 
 
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    # username = Column(String, nullable=True)  # to be deprecated for email
     password = Column(String)  # a hashed password
     role = Column(String, default="user")  # to be deprecated
     email = Column(String, unique=True, index=True, nullable=False)

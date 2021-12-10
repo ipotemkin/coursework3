@@ -2,10 +2,8 @@ from fastapi import APIRouter, status, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.service.users import UserService
-from app.dependencies import get_db, jwt_decode
+from app.dependencies import get_db
 from sqlalchemy.orm import Session
-
-from app.dependencies import oauth2_scheme
 
 from app.dao.model.users import UserBM
 from app.dao.model.rtokens import TokenRequest, TokenResponse, RefreshTokensRequest
@@ -44,7 +42,7 @@ def authenticate_user(email: str, password: str, db: Session = Depends(get_db)):
 # authentication via Swagger using OAuth2 form
 @router.post('/login_oauth2', status_code=status.HTTP_201_CREATED, response_model=TokenResponse,
              summary='Получить токены')
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_oauth2(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """
     Получить токены / Generate tokens
     """

@@ -1,9 +1,7 @@
 from app.service.basic import BasicService
 from app.dao.favorites import FavoriteMovieDAO
-from app.service.movies import MovieService
 from app.dao.model.movies import MovieBMSimple
 from app.constants import ITEMS_ON_PAGE
-from app.errors import NotFoundError
 
 
 class FavoriteMovieService(BasicService):

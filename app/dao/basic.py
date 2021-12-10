@@ -1,5 +1,3 @@
-from sqlalchemy import desc
-
 from app.errors import NotFoundError, NoContentError, BadRequestError, DatabaseError, ValidationError
 from app.constants import ITEMS_ON_PAGE
 
@@ -37,8 +35,7 @@ class BasicDAO:
         # to check whether the new_obj meets the model; it will be unnecessary after DB migration
         try:
             self.schema.parse_obj(new_obj)
-        except Exception as e:
-            # print(f'Error: {e}')
+        except Exception:
             raise ValidationError
 
         try:
@@ -102,8 +99,5 @@ class BasicDAO:
 
         if not res:
             raise NotFoundError
-
-        # if not (res := self.session.query(self.model).filter_by(**req).offest(start_at).limit(limit).all() if req else self.model.query.all()):
-        #     raise NotFoundError
 
         return [self.nested_schema.from_orm(obj).dict() for obj in res]

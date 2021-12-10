@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from typing import Optional
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from app.dao.model.directors import DirectorBM
 from app.dao.model.genres import GenreBM
@@ -43,19 +42,5 @@ class MovieBMSimple(MovieUpdateBM):
 
 
 class MovieBM(MovieBMSimple):
-    # pass
     director: DirectorBM
     genre: GenreBM
-
-
-# class FavoriteMovieBM(BaseModel):
-#     description: str
-#     director_id: int
-#     genre_id: int
-#     rating: float
-#     title: str
-#     trailer: Optional[str]
-#     year: int
-#
-#     class Config:
-#         orm_mode = True

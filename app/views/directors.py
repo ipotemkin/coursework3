@@ -3,7 +3,6 @@ from app.dao.model.directors import DirectorBM, DirectorUpdateBM
 from app.service.directors import DirectorService
 from app.dependencies import get_db
 from sqlalchemy.orm import Session
-import time
 
 router = APIRouter(prefix='/directors', tags=['directors'])
 

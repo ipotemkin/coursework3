@@ -35,7 +35,8 @@ class MovieDAO(BasicDAO):
 
         if state == 'new':
             if req:
-                res = self.session.query(self.model).filter_by(**req).order_by(desc('year')).limit(limit).offset(start_at).all()
+                res = self.session.query(self.model).filter_by(**req)\
+                    .order_by(desc('year')).limit(limit).offset(start_at).all()
             else:
                 res = self.model.query.order_by(desc('year')).offest(start_at).limit(limit).all()
 
@@ -48,8 +49,4 @@ class MovieDAO(BasicDAO):
         if not res:
             raise NotFoundError
 
-        # if not (res := self.session.query(self.model).filter_by(**req).offest(start_at).limit(limit).all() if req else self.model.query.all()):
-        #     raise NotFoundError
-
         return [self.nested_schema.from_orm(obj).dict() for obj in res]
-

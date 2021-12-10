@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Response, Depends
 from app.dao.model.users import UserBM, UserUpdateBM
 from app.service.users import UserService
-from app.dependencies import get_db, valid_token, valid_admin_token
+from app.dependencies import get_db, valid_token
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
@@ -98,9 +98,9 @@ async def users_update(user: UserUpdateBM, pk: int, db: Session = Depends(get_db
 
 
 @router.put('/password',
-              # status_code=status.HTTP_204_NO_CONTENT,
-              summary='Обновить пароль пользователя с указанным ID',
-              # dependencies=[Depends(valid_admin_token)]
+            # status_code=status.HTTP_204_NO_CONTENT,
+            summary='Обновить пароль пользователя с указанным ID',
+            # dependencies=[Depends(valid_admin_token)]
             )
 async def users_update_password(body: PasswordChange, db: Session = Depends(get_db),
                                 decoded_token=Depends(valid_token)):

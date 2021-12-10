@@ -114,7 +114,7 @@ class UserService(BasicService):
         if not self.check_password_with_hash(old_password, user.get('password')):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f'Incorrect password',
+                detail='Incorrect password',
                 # headers={"WWW-Authenticate": "Bearer"},
             )
         self.update({'password': new_password}, pk)

@@ -1,7 +1,6 @@
-from fastapi import APIRouter, status, Response, Depends
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.dao.model.genres import GenreBM, GenreUpdateBM
 from app.service.genres import GenreService
 from app.dependencies import get_db, valid_token
 from app.service.users import UserService

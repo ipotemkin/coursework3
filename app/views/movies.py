@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Response, Depends
 from app.dao.model.movies import MovieUpdateBM, MovieBMSimple
 from app.service.movies import MovieService
-from app.dependencies import get_db, valid_token, valid_admin_token
+from app.dependencies import get_db, valid_admin_token
 from sqlalchemy.orm import Session
 
 router = APIRouter(prefix='/movies', tags=['movies'],
