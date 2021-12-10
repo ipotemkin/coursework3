@@ -35,14 +35,18 @@ tags_metadata = [
     },
     {
         'name': 'favorites',
-        'description': 'Операции с записями юзер–любимый фильм (тест)',
+        'description': 'Операции с любимыми фильмами',
     },
 ]
 
 
 app = FastAPI(title='Movies API on FastAPI',
-              description='This is a refactored app from lessons 18 and 19',
+              description='Coursework Module 3 with SkyPro',
               version='1.0.0',
+              contact={
+                  "name": "Igor Potemkin",
+                  "email": "ipotemkin@rambler.ru",
+              },
               openapi_tags=tags_metadata,
               docs_url='/')
 
@@ -67,7 +71,6 @@ app.include_router(directors.router)
 app.include_router(genres.router)
 app.include_router(users.router)
 app.include_router(auth.router)
-# app.include_router(tokens.router)
 app.include_router(favorites.router)
 app.include_router(genre.router)
 
@@ -76,7 +79,7 @@ app.include_router(genre.router)
 @repeat_every(seconds=60*60*24)
 def del_expired_tokens_repeat():
     del_expired_tokens()
-    print('Expired tokens deleted', datetime.datetime.utcnow())  # TODO: remove this debug on release
+    print('Expired tokens deleted', datetime.datetime.utcnow())
 
 
 @app.on_event("startup")
