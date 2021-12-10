@@ -43,7 +43,7 @@ async def genres_post(genre: GenreBM, response: Response, db: Session = Depends(
     """
     new_obj = GenreService(db).create(genre.dict())
     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
-    return []
+    return new_obj
 
 
 @router.patch('/{pk}',

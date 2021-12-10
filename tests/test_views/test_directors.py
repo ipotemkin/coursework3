@@ -1,10 +1,11 @@
 import os
 from http import HTTPStatus
 import pytest
-from app.dao.model.directors import Director, DirectorBM
+from app.dao.model.directors import Director
 from fixtures import data
 from run import app
 from fastapi.testclient import TestClient
+from app.constants import ITEMS_ON_PAGE
 
 client = TestClient(app)
 
@@ -62,7 +63,7 @@ class TestDirectorsView:
     def test_many_with_page(self):
         response = client.get("/directors/?page=1")
         assert response.status_code == HTTPStatus.OK
-        assert response.json() == data['directors'][:2]
+        assert response.json() == data['directors'][:ITEMS_ON_PAGE]
 
     def test_one(self, db_session):
         response = client.get("/directors/1")
