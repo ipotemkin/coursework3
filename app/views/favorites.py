@@ -16,7 +16,7 @@ router = APIRouter(prefix='/favorites', tags=['favorites'])
 async def favorites_get_all(
         page: int = None,
         db: Session = Depends(get_db),
-        user: UserInDB.dict = Depends(get_current_user)):
+        user: dict = Depends(get_current_user)):
     """
     Получить любимые фильмы текущего пользователя
     """
@@ -49,7 +49,7 @@ async def add_favorites_to_current_user(
         movie_id: int,
         response: Response,
         db: Session = Depends(get_db),
-        user: UserInDB.dict = Depends(get_current_user)
+        user: dict = Depends(get_current_user)
         ):
     """
     Добавить любимый фильм к текущему пользователю:
@@ -69,7 +69,7 @@ async def add_favorites_to_current_user(
 async def del_favorites_of_current_user(
         movie_id: int,
         db: Session = Depends(get_db),
-        user: UserInDB.dict = Depends(get_current_user),
+        user: dict = Depends(get_current_user),
         ):
     """
     Удалить запись о жанре с указанным ID:

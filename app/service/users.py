@@ -38,7 +38,7 @@ class UserService(BasicService):
     @staticmethod
     def check_access_token(access_token: str):
         try:
-            data = jwt.decode(access_token, JWT_KEY, JWT_METHOD)
+            data = jwt.decode(access_token, JWT_KEY, [JWT_METHOD])
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -75,13 +75,13 @@ class UserService(BasicService):
         return {'access_token': access_token, 'refresh_token': refresh_token, 'token_type': 'bearer'}
 
     def refresh_jwt(self, refresh_token: str):
-        data = jwt.decode(refresh_token, JWT_KEY, JWT_METHOD)
+        data = jwt.decode(refresh_token, JWT_KEY, [JWT_METHOD])
         return self.gen_jwt(data)
 
     def check_password(self, email: str, password: str) -> bool:
         """
         Checks a user's password
-        :param username: user name
+        :param email: user login name
         :param password: a password to check
         :return: True or False
         """

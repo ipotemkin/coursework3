@@ -20,7 +20,6 @@ class User(Base):
 
 
 class UserBase(BaseModel):
-    # username: Optional[str]
     password: Optional[str]
     role: Optional[str]
     email: EmailStr
@@ -42,10 +41,9 @@ class UserInDB(UserBase):
 
 
 class UserUpdateBM(UserBase):
-    # username: Optional[str]
     password: Optional[str]
     role: Optional[str]
-    email: Optional[EmailStr]
+    email: Optional[EmailStr]  # noqa done intentionally
     name: Optional[str]
     surname: Optional[str]
     favorite_genre: Optional[int]

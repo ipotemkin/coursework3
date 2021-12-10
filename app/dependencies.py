@@ -24,7 +24,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login_oauth2')
 
 def jwt_decode(token: str):
     try:
-        decoded_jwt = jwt.decode(token, JWT_KEY, JWT_METHOD)
+        decoded_jwt = jwt.decode(token, JWT_KEY, [JWT_METHOD])
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

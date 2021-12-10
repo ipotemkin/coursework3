@@ -27,5 +27,5 @@ class FavoriteMovieBM(FavoriteMovieBase):
 
 
 class FavoriteMovieUpdateBM(FavoriteMovieBase):
-    user_id: Optional[int]
-    movie_id: Optional[int]
+    user_id: Optional[int]  # noqa done intentionally
+    movie_id: Optional[int]  # noqa done intentionally
