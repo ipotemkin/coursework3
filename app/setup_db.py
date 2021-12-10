@@ -6,7 +6,17 @@ from os import environ
 BASE_DIR = Path(__file__).parent
 
 TESTING = environ.get("TESTING")
-print(TESTING)
+
+# engine = create_engine(
+#     f"sqlite:///:memory:",
+#     connect_args={'check_same_thread': False},
+#     echo=True)
+
+# engine = create_engine(
+#     f"sqlite:///{BASE_DIR.parent}/movies.db",
+#     connect_args={'check_same_thread': False},
+#     echo=True)
+
 
 if TESTING:
     engine = create_engine(
@@ -18,7 +28,6 @@ else:
         f"sqlite:///{BASE_DIR.parent}/movies.db",
         connect_args={'check_same_thread': False},
         echo=True)
-
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

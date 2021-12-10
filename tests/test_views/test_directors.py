@@ -5,9 +5,8 @@ from app.dao.model.directors import Director
 from fixtures import data
 from run import app
 from fastapi.testclient import TestClient
+from tests.test_views.conftest import Base
 
-
-os.environ['TESTING'] = 'True'
 
 client = TestClient(app)
 
@@ -45,25 +44,32 @@ class TestDirectorsView:
     #     db_session.flush()
     #     return obj
 
-    def test_many(self):
+    def test_check_metadata(self):
+        print(Base.metadata.__dict__)
+
+    def test_set_testing(self):
+        # os.environ['TESTING'] = 'TRUE'
+        print('TESTING:', os.environ.get("TESTING"))
+
+    def test_many(self, db_session):
         response = client.get("/directors/")
         assert response.status_code == HTTPStatus.OK
         assert response.json() == data['directors']
 
-    def test_many_with_page(self):
-        response = client.get("/directors/?page=1")
-        assert response.status_code == HTTPStatus.OK
-        assert response.json() == data['directors'][:2]
-
-    def test_one(self):
-        response = client.get("/directors/1")
-        assert response.status_code == HTTPStatus.OK
-        assert response.json() == data['directors'][0]
-
-    def test_one_not_found(self):
-        response = client.get("/directors/1000")
-        assert response.status_code == HTTPStatus.NOT_FOUND
-        assert response.json() == {'message': 'Not Found'}
+    # def test_many_with_page(self):
+    #     response = client.get("/directors/?page=1")
+    #     assert response.status_code == HTTPStatus.OK
+    #     assert response.json() == data['directors'][:2]
+    #
+    # def test_one(self):
+    #     response = client.get("/directors/1")
+    #     assert response.status_code == HTTPStatus.OK
+    #     assert response.json() == data['directors'][0]
+    #
+    # def test_one_not_found(self):
+    #     response = client.get("/directors/1000")
+    #     assert response.status_code == HTTPStatus.NOT_FOUND
+    #     assert response.json() == {'message': 'Not Found'}
 
 
 
