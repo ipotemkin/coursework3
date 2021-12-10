@@ -9,4 +9,6 @@ backup/
 backup/notes.py
 .pytest_cache/
 *.db
-./tests/.coverage
+tests/.coverage
+alembic.ini
+alembic
