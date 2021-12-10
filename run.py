@@ -1,14 +1,10 @@
-import time
-
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from uvicorn import run
 
-from app.utils import get_one
 from app.errors import NotFoundError, NoContentError, ValidationError, DatabaseError, BadRequestError
 from app.views import directors, genres, movies, users, auth, tokens, favorites, genre
-from databases import Database
 
 from app.dependencies import del_expired_tokens
 from fastapi_utils.tasks import repeat_every
@@ -49,10 +45,6 @@ tags_metadata = [
         'name': 'favorites',
         'description': 'Операции с записями юзер–любимый фильм (тест)',
     },
-    # {
-    #     'name': 'docs',
-    #     'description': 'Документация',
-    # },
 ]
 
 
@@ -98,9 +90,6 @@ def del_expired_tokens_repeat():
 @app.on_event("startup")
 def on_startup():
     pass
-    # init_db()
-    #
-    # print("app's items:", app.__dict__)  # TODO: remove on release
 
 
 # exception handlers
@@ -143,28 +132,6 @@ def validation_error(request: Request, exc: ValidationError):
         status_code=400,
         content={'message': "Validation Error"}
     )
-
-
-@app.get('/aio/directors', tags=['aio'])
-async def aio_directors_get_all():
-    """
-    Получить всех режиссеров
-    """
-    dbase = Database("sqlite:///movies.db")
-    t0 = time.perf_counter()
-    # res = await run_asql('select * from director')
-    res = await dbase.fetch_all(query='select * from director')
-    elapsed = time.perf_counter() - t0
-    print('aio with databases [%0.8fs]' % elapsed)
-    return res
-
-
-@app.get('/aio/directors/{pk}', tags=['aio'])
-async def aio_directors_get_one(pk: int):
-    """
-    Получить режиссера по ID
-    """
-    return await get_one(f'select * from director where id = {pk} limit 1')
 
 
 if __name__ == '__main__':
