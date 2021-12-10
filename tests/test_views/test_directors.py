@@ -74,20 +74,3 @@ class TestDirectorsView:
         response = client.get("/directors/1000")
         assert response.status_code == HTTPStatus.NOT_FOUND
         assert response.json() == {'message': 'Not Found'}
-
-    def test_update(self, new_director, db_session):
-        response = client.patch("/directors/100", json=test_director)
-        assert response.status_code == HTTPStatus.OK
-        assert response.json() == test_director
-
-    def test_create(self, db_session):
-        new_director = {"id": 101, "name": "Никита Михалков"}
-        response = client.post("/directors", json=new_director)
-        assert response.status_code == HTTPStatus.CREATED
-        assert response.json() == {"id": 101, "name": "Никита Михалков"}
-
-    def test_delete(self, db_session):
-        response = client.delete("/directors/100")
-        assert response.status_code == HTTPStatus.OK
-        response = client.get("/directors/100")
-        assert response.status_code == HTTPStatus.NOT_FOUND

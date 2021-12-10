@@ -49,20 +49,3 @@ class TestGenresView:
         response = client.get("/genres/1000")
         assert response.status_code == HTTPStatus.NOT_FOUND
         assert response.json() == {'message': 'Not Found'}
-
-    def test_update(self, new_genre, db_session):
-        response = client.patch("/genres/100", json=test_genre)
-        assert response.status_code == HTTPStatus.OK
-        assert response.json() == test_genre
-
-    def test_create(self, db_session):
-        new_genre = {"id": 101, "name": "Новый жанр"}
-        response = client.post("/genres", json=new_genre)
-        assert response.status_code == HTTPStatus.CREATED
-        assert response.json() == {"id": 101, "name": "Новый жанр"}
-
-    def test_delete(self, db_session):
-        response = client.delete("/genres/100")
-        assert response.status_code == HTTPStatus.OK
-        response = client.get("/genres/100")
-        assert response.status_code == HTTPStatus.NOT_FOUND
