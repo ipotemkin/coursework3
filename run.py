@@ -4,8 +4,7 @@ from fastapi.responses import JSONResponse
 from uvicorn import run
 
 from app.errors import NotFoundError, NoContentError, ValidationError, DatabaseError, BadRequestError
-from app.views import directors, genres, movies, users, auth, tokens, favorites, genre
-# from app.views import tokens
+from app.views import directors, genres, movies, users, auth, favorites, genre
 
 from app.dependencies import del_expired_tokens
 from fastapi_utils.tasks import repeat_every
@@ -34,10 +33,6 @@ tags_metadata = [
         'name': 'auth',
         'description': 'Операции с токенами',
     },
-    # {
-    #     'name': 'tokens',
-    #     'description': 'Операции с базой токенов (тест)',
-    # },
     {
         'name': 'favorites',
         'description': 'Операции с записями юзер–любимый фильм (тест)',

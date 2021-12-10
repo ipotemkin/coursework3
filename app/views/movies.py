@@ -1,6 +1,4 @@
-from fastapi import APIRouter, status, Response, Depends
-# from fastapi import status, Response
-# from app.dao.model.movies import MovieUpdateBM, MovieBMSimple
+from fastapi import APIRouter, Depends
 from app.service.movies import MovieService
 from app.dependencies import get_db
 from sqlalchemy.orm import Session
@@ -39,54 +37,3 @@ async def movies_get_one(pk: int, db: Session = Depends(get_db)):
     - **pk**: ID фильма
     """
     return MovieService(db).get_one(pk)
-
-
-# @router.post('', status_code=status.HTTP_201_CREATED,
-#              summary='Добавить фильм',
-#              response_description="The created item",
-#              dependencies=[Depends(valid_admin_token)])
-# async def movies_post(movie: MovieBMSimple, response: Response, db: Session = Depends(get_db)):
-#     """
-#     Добавить фильм:
-#
-#     - **id**: ID фильма - целое число (необязательный параметр)
-#     - **title**: название фильма (обязательный параметр)
-#     - **description**: описание фильма (обязательный параметр)
-#     - **rating**: рейтинг фильма
-#     - **director_id**: режиссер фильма (обязательный параметр)
-#     - **genre_id**: жанр фильма (обязательный параметр)
-#     - **year**: год выпуска фильма (обязательный параметр)
-#     - **trailer**: ссылка на трейлер (необязательный параметр)
-#     """
-#     new_obj = MovieService(db).create(movie.dict())
-#     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
-#     return []
-#
-
-# @router.patch('/{pk}',
-#               # status_code=status.HTTP_204_NO_CONTENT,
-#               summary='Изменить запись о фильме с указанным ID',
-#               dependencies=[Depends(valid_admin_token)])
-# async def movies_update(movie: MovieUpdateBM, pk: int, db: Session = Depends(get_db)):
-#     """
-#     Изменить запись о фильме с указанным ID:
-#
-#     - **title**: название фильма
-#     - **description**: описание фильма
-#     - **rating**: рейтинг фильма
-#     - **director_id**: режиссер фильма
-#     - **genre_id**: жанр фильма
-#     - **year**: год выпуска фильма
-#     - **trailer**: ссылка на трейлер
-#     """
-#     return MovieService(db).update(movie.dict(), pk)
-#
-#
-# @router.delete('/{pk}', status_code=status.HTTP_200_OK,
-#                summary='Удалить запись о фильме с указанным ID',
-#                dependencies=[Depends(valid_admin_token)])
-# async def movies_delete(pk: int, db: Session = Depends(get_db)):
-#     """
-#     Удалить запись о фильме с указанным ID:
-#     """
-#     MovieService(db).delete(pk)
