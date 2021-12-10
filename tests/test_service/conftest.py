@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.dao.model.users import User
 from app.dao.model.movies import Movie
-from app.dao.model.favotites import FavoriteMovie
+from app.dao.model.favorites import FavoriteMovie
 from app.dao.model.base import Base
 
 engine = create_engine('sqlite:///:memory:', echo=True)

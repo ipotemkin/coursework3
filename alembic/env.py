@@ -19,7 +19,7 @@ fileConfig(config.config_file_name)
 # target_metadata = mymodel.Base.metadata
 # target_metadata = None
 
-from app.dao.model import directors, genres, movies, users, rtokens, favotites
+from app.dao.model import directors, genres, movies, users, rtokens, favorites
 from app.dao.model.base import Base
 target_metadata = Base.metadata
 # print(target_metadata.__dict__)

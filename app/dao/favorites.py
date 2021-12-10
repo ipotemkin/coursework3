@@ -1,5 +1,5 @@
 from app.dao.basic import BasicDAO
-from app.dao.model.favotites import FavoriteMovie, FavoriteMovieBM
+from app.dao.model.favorites import FavoriteMovie, FavoriteMovieBM
 
 
 class FavoriteMovieDAO(BasicDAO):

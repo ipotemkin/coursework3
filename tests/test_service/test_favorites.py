@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from app.dao.model.favotites import FavoriteMovie, FavoriteMovieBM
+from app.dao.model.favorites import FavoriteMovie, FavoriteMovieBM
 from app.dao.model.movies import Movie, MovieBMSimple
 from app.service.favorites import FavoriteMovieService
 

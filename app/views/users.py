@@ -18,6 +18,17 @@ class PasswordChange(BaseModel):
         orm_mode = True
 
 
+@router.get('/all', summary='Получить всех пользователей')
+@router.get('/all/', include_in_schema=False)
+async def users_all(db: Session = Depends(get_db)):
+    """
+    Получить всех пользователей
+    """
+    # pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    res = UserService(session=db).get_all()
+    return res
+
+
 @router.get('', summary='Получить текущего пользователя')
 @router.get('/', include_in_schema=False)
 async def users_current_user(db: Session = Depends(get_db), decoded_token=Depends(valid_token)):

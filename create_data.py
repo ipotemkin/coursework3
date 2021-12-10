@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.setup_db import engine
-from app.dao.model import directors, genres, movies, users, rtokens, favotites
+from app.dao.model import directors, genres, movies, users, rtokens, favorites
 from app.dao.model.base import Base
 from fixtures import data
 from app.dao.model.directors import Director

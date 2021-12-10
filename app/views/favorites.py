@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, status, Response, Depends
 
-from app.dao.model.favotites import FavoriteMovieBM
+from app.dao.model.favorites import FavoriteMovieBM
 from app.dao.model.users import UserInDB
 
 from app.service.favorites import FavoriteMovieService
