@@ -5,9 +5,7 @@ from app.dependencies import get_db, valid_token
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-router = APIRouter(prefix='/user', tags=['users'],
-                   # dependencies=[Depends(valid_token)]
-                   )
+router = APIRouter(prefix='/user', tags=['users'])
 
 
 class PasswordChange(BaseModel):
@@ -16,17 +14,6 @@ class PasswordChange(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-@router.get('/all', summary='Получить всех пользователей')
-@router.get('/all/', include_in_schema=False)
-async def users_all(db: Session = Depends(get_db)):
-    """
-    Получить всех пользователей
-    """
-    # pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
-    res = UserService(session=db).get_all()
-    return res
 
 
 @router.get('', summary='Получить текущего пользователя')
@@ -69,12 +56,9 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
 @router.patch('',
               # status_code=status.HTTP_204_NO_CONTENT,
               summary='Изменить запись текущего пользователя',
-              # dependencies=[Depends(valid_admin_token)]
               )
 @router.patch('/',
               # status_code=status.HTTP_204_NO_CONTENT,
-              summary='Изменить запись текущего пользователя',
-              # dependencies=[Depends(valid_admin_token)],
               include_in_schema=False
               )
 async def current_user_update(user: UserUpdateBM,
@@ -92,26 +76,9 @@ async def current_user_update(user: UserUpdateBM,
     return UserService(db).update(user.dict(), pk)
 
 
-@router.patch('/{pk}',
-              # status_code=status.HTTP_204_NO_CONTENT,
-              summary='Изменить запись пользователя с указанным ID',
-              # dependencies=[Depends(valid_admin_token)]
-              )
-async def users_update(user: UserUpdateBM, pk: int, db: Session = Depends(get_db)):
-    """
-    Изменить запись пользователя с указанным ID:
-
-    - **name**: изменить имя пользователя
-    - **role**: изменить роль пользователя
-    - **password**: изменить пароль пользователя
-    """
-    return UserService(db).update(user.dict(), pk)
-
-
 @router.put('/password',
             # status_code=status.HTTP_204_NO_CONTENT,
             summary='Обновить пароль пользователя с указанным ID',
-            # dependencies=[Depends(valid_admin_token)]
             )
 async def users_update_password(body: PasswordChange, db: Session = Depends(get_db),
                                 decoded_token=Depends(valid_token)):
@@ -123,11 +90,3 @@ async def users_update_password(body: PasswordChange, db: Session = Depends(get_
     """
     pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
     return UserService(db).update_password(pk, body.password_1, body.password_2)
-
-
-@router.delete('/{pk}', status_code=status.HTTP_200_OK, summary='Удалить запись пользователя с указанным ID')
-async def users_delete(pk: int, db: Session = Depends(get_db)):
-    """
-    Удалить запись пользователя с указанным ID:
-    """
-    UserService(db).delete(pk)

@@ -34,10 +34,6 @@ tags_metadata = [
         'description': 'Операции с токенами',
     },
     {
-        'name': 'aio',
-        'description': 'Асинхронные операции с базой (тест)',
-    },
-    {
         'name': 'tokens',
         'description': 'Операции с базой токенов (тест)',
     },
