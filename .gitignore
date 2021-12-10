@@ -8,3 +8,4 @@ __pycache__
 backup/
 backup/notes.py
 .pytest_cache/
+*.db
