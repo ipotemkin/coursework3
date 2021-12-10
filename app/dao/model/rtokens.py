@@ -26,6 +26,7 @@ class TokenRequest(BaseModel):
         orm_mode = True
 
 
+# a model for token response
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
@@ -35,6 +36,21 @@ class TokenResponse(BaseModel):
         orm_mode = True
 
 
+# a model to refresh tokens
 class RefreshTokensRequest(BaseModel):
     access_token: str
     refresh_token: str
+
+
+# a user model to make a token
+class UserForTokenModel(BaseModel):
+    email: EmailStr
+    role: str
+
+    class Config:
+        orm_mode = True
+
+
+# a full model for token
+class TokenModel(UserForTokenModel):
+    exp: int

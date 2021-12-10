@@ -9,24 +9,12 @@ from app.constants import JWT_KEY, JWT_METHOD, AC_TOKEN_EXP_TIME_MIN, R_TOKEN_EX
 
 from app.service.basic import BasicService
 from app.dao.users import UserDAO
+from app.dao.model.rtokens import UserForTokenModel, TokenModel
 
 import datetime
 import calendar
-from pydantic import BaseModel
 
 from app.service.rtokens import RTokenService
-
-
-class UserForTokenModel(BaseModel):
-    email: str
-    role: str
-
-    class Config:
-        orm_mode = True
-
-
-class TokenModel(UserForTokenModel):
-    exp: int
 
 
 class UserService(BasicService):

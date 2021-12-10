@@ -3,8 +3,6 @@ from app.dao.rtokens import RTokenDAO
 import jwt
 from app.constants import JWT_KEY, JWT_METHOD
 
-# from implemented import user_service
-
 
 class RTokenService(BasicService):
     def __init__(self, session):
