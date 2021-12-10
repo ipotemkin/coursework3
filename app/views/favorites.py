@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, status, Response, Depends
 
-from app.dao.model.favorites import FavoriteMovieBM
-from app.dao.model.users import UserInDB
+# from app.dao.model.favorites import FavoriteMovieBM
+# from app.dao.model.users import UserInDB
 
 from app.service.favorites import FavoriteMovieService
 
@@ -23,19 +23,19 @@ async def favorites_get_all(
     return FavoriteMovieService(db).get_all_by_user(user.get('id'), page=page)
 
 
-@router.post('', status_code=status.HTTP_201_CREATED, summary='Добавить запись юзер–любимый фильм',
-             response_description="The created item")
-async def favorites_post(record: FavoriteMovieBM, response: Response, db: Session = Depends(get_db)):
-    """
-    Добавить запись юзер–любимый фильм:
-
-    - **id**: ID жанра - целое число (необязательный параметр)
-    - **user_id**: ID пользователя (обязательный параметр)
-    - **movie_id**: ID фильма (обязательный параметр)
-    """
-    new_obj = FavoriteMovieService(db).create(record.dict())
-    response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
-    return new_obj
+# @router.post('', status_code=status.HTTP_201_CREATED, summary='Добавить запись юзер–любимый фильм',
+#              response_description="The created item")
+# async def favorites_post(record: FavoriteMovieBM, response: Response, db: Session = Depends(get_db)):
+#     """
+#     Добавить запись юзер–любимый фильм:
+#
+#     - **id**: ID жанра - целое число (необязательный параметр)
+#     - **user_id**: ID пользователя (обязательный параметр)
+#     - **movie_id**: ID фильма (обязательный параметр)
+#     """
+#     new_obj = FavoriteMovieService(db).create(record.dict())
+#     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
+#     return new_obj
 
 
 @router.post(
