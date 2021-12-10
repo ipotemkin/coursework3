@@ -10,7 +10,7 @@ from app.dao.model.base import Base
 engine = create_engine('sqlite:///:memory:', echo=True)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='module')
 def db_migration():
     with engine.begin() as conn:
         Base.metadata.drop_all(conn)
