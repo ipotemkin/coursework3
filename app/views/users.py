@@ -27,16 +27,16 @@ async def users_current_user(db: Session = Depends(get_db), decoded_token=Depend
     return res
 
 
-@router.get('/{pk}', summary='Получить пользователя по его ID')
-async def users_get_one(pk: int, db: Session = Depends(get_db)):
-    """
-    Получить пользователя по ID:
-
-    - **pk**: ID пользователя
-    """
-    return UserService(db).get_one(pk)
-
-
+# @router.get('/{pk}', summary='Получить пользователя по его ID')
+# async def users_get_one(pk: int, db: Session = Depends(get_db)):
+#     """
+#     Получить пользователя по ID:
+#
+#     - **pk**: ID пользователя
+#     """
+#     return UserService(db).get_one(pk)
+#
+#
 @router.post('', status_code=status.HTTP_201_CREATED, summary='Добавить пользователя',
              response_description="The created item")
 async def users_post(user: UserBM, response: Response, db: Session = Depends(get_db)):
