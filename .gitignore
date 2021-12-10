@@ -7,3 +7,4 @@ __pycache__
 *backup.*
 backup/
 backup/notes.py
+.pytest_cache/
