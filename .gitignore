@@ -12,3 +12,4 @@ backup/notes.py
 tests/.coverage
 alembic.ini
 alembic
+.github
