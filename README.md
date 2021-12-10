@@ -22,6 +22,13 @@ After authorization, you will get two tokens:
 You can use your pair of tokens only once to get a new pair of tokens
 
 
+Testing data
+------
+
+You can find testing data in fixtures.py
+
+To build up a database with these testing data just run create_data.py
+
 Dependencies
 -------
 
