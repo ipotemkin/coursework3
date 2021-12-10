@@ -52,6 +52,7 @@ class BasicDAO:
         except Exception as e:
             print(e)
             raise DatabaseError
+        # return obj
         return obj
 
     def update(self, new_obj: dict, uid: int):
@@ -75,6 +76,8 @@ class BasicDAO:
             self.session.commit()
         except Exception:
             raise DatabaseError
+        # TODO
+        return self.get_one(uid)
 
     def delete(self, uid: int):
         if not (obj := self.session.query(self.model).get(uid)):

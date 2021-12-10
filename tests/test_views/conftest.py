@@ -20,11 +20,8 @@ from app.setup_db import engine  # noqa
 
 @pytest.fixture(scope='session')
 def db_migration():
-    # create_database('sqlite:///:memory:')
-    # print('I am here')
     with engine.begin() as conn:
         Base.metadata.drop_all(conn)
-        # breakpoint()
         Base.metadata.create_all(conn)
 
 

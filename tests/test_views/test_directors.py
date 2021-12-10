@@ -1,14 +1,14 @@
 import os
 from http import HTTPStatus
 import pytest
-from app.dao.model.directors import Director
+from app.dao.model.directors import Director, DirectorBM
 from fixtures import data
 from run import app
 from fastapi.testclient import TestClient
-from tests.test_views.conftest import Base
-
 
 client = TestClient(app)
+
+test_director = {"id": 100, "name": "Никита Михалков"}
 
 
 # def test_health_check():
@@ -37,56 +37,56 @@ client = TestClient(app)
 #     return app
 
 class TestDirectorsView:
-    # @pytest.fixture
-    # def director(self, db_session):
-    #     obj = Director(id=1, name='Spillberg')
-    #     db_session.add(obj)
-    #     db_session.flush()
-    #     return obj
+    @pytest.fixture
+    def directors(self, db_session):
+        for i in data['directors']:
+            db_session.add(Director(**i))
+            db_session.commit()
+        return data['directors']
 
-    def test_check_metadata(self):
-        print(Base.metadata.__dict__)
+    @pytest.fixture
+    def new_director(self, db_session):
+        obj = Director(id=100, name='Михалков')
+        db_session.add(obj)
+        db_session.commit()
+        return obj
 
-    def test_set_testing(self):
-        # os.environ['TESTING'] = 'TRUE'
-        print('TESTING:', os.environ.get("TESTING"))
+    def test_testing_is_true(self):
+        assert os.environ.get("TESTING") == 'TRUE'
 
-    def test_many(self, db_session):
+    def test_many(self, db_session, directors):
         response = client.get("/directors/")
         assert response.status_code == HTTPStatus.OK
-        assert response.json() == data['directors']
+        assert response.json() == directors
 
-    # def test_many_with_page(self):
-    #     response = client.get("/directors/?page=1")
-    #     assert response.status_code == HTTPStatus.OK
-    #     assert response.json() == data['directors'][:2]
-    #
-    # def test_one(self):
-    #     response = client.get("/directors/1")
-    #     assert response.status_code == HTTPStatus.OK
-    #     assert response.json() == data['directors'][0]
-    #
-    # def test_one_not_found(self):
-    #     response = client.get("/directors/1000")
-    #     assert response.status_code == HTTPStatus.NOT_FOUND
-    #     assert response.json() == {'message': 'Not Found'}
+    def test_many_with_page(self):
+        response = client.get("/directors/?page=1")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == data['directors'][:2]
 
+    def test_one(self, db_session):
+        response = client.get("/directors/1")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == data['directors'][0]
 
+    def test_one_not_found(self, db_session):
+        response = client.get("/directors/1000")
+        assert response.status_code == HTTPStatus.NOT_FOUND
+        assert response.json() == {'message': 'Not Found'}
 
-    # def test_director_pages(self, client, director):
-    #     response = client.get("/directors/?page=1")
-    #     assert response.status_code == HTTPStatus.OK
-    #     assert len(response.json) == 1
-    #
-    #     response = client.get("/directors/?page=2")
-    #     assert response.status_code == HTTPStatus.OK
-    #     assert len(response.json) == 0
-    #
-    # def test_director(self, client, director):
-    #     response = client.get("/directors/1")
-    #     assert response.status_code == HTTPStatus.OK
-    #     assert response.json == {"id": director.id, "name": director.name}
-    #
-    # def test_director_not_found(self, client, director):
-    #     response = client.get("/directors/2")
-    #     assert response.status_code == HTTPStatus.NOT_FOUND
+    def test_update(self, new_director, db_session):
+        response = client.patch("/directors/100", json=test_director)
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == test_director
+
+    def test_create(self, db_session):
+        new_director = {"id": 101, "name": "Никита Михалков"}
+        response = client.post("/directors", json=new_director)
+        assert response.status_code == HTTPStatus.CREATED
+        assert response.json() == {"id": 101, "name": "Никита Михалков"}
+
+    def test_delete(self, db_session):
+        response = client.delete("/directors/100")
+        assert response.status_code == HTTPStatus.OK
+        response = client.get("/directors/100")
+        assert response.status_code == HTTPStatus.NOT_FOUND

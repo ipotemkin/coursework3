@@ -45,7 +45,7 @@ async def directors_post(director: DirectorBM, response: Response, db: Session =
     new_obj = DirectorService(db).create(director.dict())
     # new_obj = director_service.create(director.dict())
     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
-    return []
+    return new_obj
 
 
 @router.patch('/{pk}',
