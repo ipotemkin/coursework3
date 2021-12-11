@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, status, Response, Depends
+from fastapi import APIRouter, status, Response, Depends, Query, Path
 
 from app.service.favorites import FavoriteMovieService
 from app.dependencies import get_db, get_current_user
+
+from typing import Optional
 
 router = APIRouter(prefix='/favorites', tags=['favorites'])
 
@@ -10,7 +12,11 @@ router = APIRouter(prefix='/favorites', tags=['favorites'])
 @router.get('/movies/', include_in_schema=False)
 @router.get('/movies', summary='Получить любимые фильмы текущего пользователя')
 async def favorites_get_all(
-        page: int = None,
+        page: Optional[int] = Query(
+            None,
+            title='Страница',
+            description='Укажите номер страницы для постраничного вывода'
+        ),
         db: Session = Depends(get_db),
         user: dict = Depends(get_current_user)):
     """
@@ -26,8 +32,12 @@ async def favorites_get_all(
     response_description="The created item"
     )
 async def add_favorites_to_current_user(
-        movie_id: int,
         response: Response,
+        movie_id: int = Path(
+            ...,
+            title='ID фильма',
+            description='Укажите ID фильма'
+        ),
         db: Session = Depends(get_db),
         user: dict = Depends(get_current_user)
         ):
@@ -46,7 +56,11 @@ async def add_favorites_to_current_user(
     status_code=status.HTTP_200_OK,
     summary='Удалить любимый фильм у текущего пользователя')
 async def del_favorites_of_current_user(
-        movie_id: int,
+        movie_id: int = Path(
+            ...,
+            title='ID фильма',
+            description='Укажите ID фильма'
+        ),
         db: Session = Depends(get_db),
         user: dict = Depends(get_current_user),
         ):
