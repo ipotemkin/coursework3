@@ -34,9 +34,12 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
     Добавить пользователя:
 
     - **id**: ID пользователя - целое число (необязательный параметр)
-    - **name**: имя пользователя (обязательный параметр)
-    - **role**: роль пользователя
+    - **email**: email пользователя - используется для его идентификации (обязательный параметр)
     - **password**: пароль пользователя
+    - **name**: имя пользователя
+    - **surname**: фамилия пользователя
+    - **role**: роль пользователя ('user' или 'admin')
+    - **favorite_genre**: ссылка на любимый жанр (=ID жанра)
     """
     new_obj = UserService(db).create(user.dict())
     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
@@ -58,9 +61,12 @@ async def current_user_update(user: UserUpdateBM,
     """
     Изменить запись текущего пользователя:
 
-    - **name**: изменить имя пользователя
-    - **role**: изменить роль пользователя
+    - **email**: изменить email пользователя
     - **password**: изменить пароль пользователя
+    - **name**: изменить имя пользователя
+    - **surname**: изменить фамилия пользователя
+    - **role**: изменить роль пользователя ('user' или 'admin')
+    - **favorite_genre**: изменить ссылку на любимый жанр (=ID жанра)
     """
     pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
     return UserService(db).update(user.dict(), pk)

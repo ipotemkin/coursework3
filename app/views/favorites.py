@@ -34,8 +34,7 @@ async def add_favorites_to_current_user(
     """
     Добавить любимый фильм к текущему пользователю:
 
-    - **id**: ID жанра - целое число (необязательный параметр)
-    - **movie_id**: ID фильма (обязательный параметр)
+    - **movie_id**: ID фильма
     """
     new_obj = FavoriteMovieService(db).create({'user_id': user.get('id'), 'movie_id': movie_id})
     response.headers['Location'] = f'{router.prefix}/{new_obj.id}'
