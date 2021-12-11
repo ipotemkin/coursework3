@@ -40,10 +40,13 @@ class UserInDB(UserBase):
     id: int
 
 
-class UserUpdateBM(UserBase):
+class UserUpdateBM(BaseModel):
     password: Optional[str]
     role: Optional[str]
-    email: Optional[EmailStr]  # noqa done intentionally
+    email: Optional[EmailStr]
     name: Optional[str]
     surname: Optional[str]
     favorite_genre: Optional[int]
+
+    class Config:
+        orm_mode = True

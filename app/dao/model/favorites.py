@@ -26,6 +26,9 @@ class FavoriteMovieBM(FavoriteMovieBase):
     id: Optional[int]
 
 
-class FavoriteMovieUpdateBM(FavoriteMovieBase):
-    user_id: Optional[int]  # noqa done intentionally
-    movie_id: Optional[int]  # noqa done intentionally
+class FavoriteMovieUpdateBM(BaseModel):
+    user_id: Optional[int]
+    movie_id: Optional[int]
+
+    class Config:
+        orm_mode = True
