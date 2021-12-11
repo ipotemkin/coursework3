@@ -13,8 +13,8 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
-    # except:
-    #     db.rollback()
+    except:  # noqa
+        db.rollback()
     finally:
         db.close()
 
@@ -35,13 +35,17 @@ def jwt_decode(token: str):
         return decoded_jwt
 
 
-# use it as dependency when authorization required
 def valid_token(token: str = Depends(oauth2_scheme)):
+    """
+    use it as dependency when authorization required
+    """
     return jwt_decode(token)
 
 
-# use it as dependency when admin authorization required
 def valid_admin_token(token: str = Depends(oauth2_scheme)):
+    """
+    use it as dependency when admin authorization required
+    """
     role = jwt_decode(token).get('role')
     if role != 'admin':
         raise HTTPException(
