@@ -62,11 +62,13 @@ class UserService(BasicService):
     def gen_jwt(self, user_obj: dict):
         UserForTokenModel.parse_obj(user_obj)  # to validate the model
 
-        ends_at = datetime.datetime.utcnow() + datetime.timedelta(minutes=AC_TOKEN_EXP_TIME_MIN)
+        t0 = datetime.datetime.utcnow()
+
+        ends_at = t0 + datetime.timedelta(minutes=AC_TOKEN_EXP_TIME_MIN)
         user_obj['exp'] = calendar.timegm(ends_at.timetuple())
         access_token = jwt.encode(user_obj, JWT_KEY, JWT_METHOD)
 
-        ends_at = datetime.datetime.utcnow() + datetime.timedelta(days=R_TOKEN_EXP_TIME_DAYS)
+        ends_at = t0 + datetime.timedelta(days=R_TOKEN_EXP_TIME_DAYS)
         user_obj['exp'] = calendar.timegm(ends_at.timetuple())
         refresh_token = jwt.encode(user_obj, JWT_KEY, JWT_METHOD)
 
