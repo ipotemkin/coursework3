@@ -47,7 +47,7 @@ class UserService(BasicService):
             )
         return TokenModel.parse_obj(data)
 
-    def check_refresh_token(self, refresh_token: str) -> bool:
+    def check_refresh_token(self, refresh_token: str):
         token = RTokenService(self.dao.session).get_all_by_filter({'token': refresh_token})
         if not token:
             raise HTTPException(
