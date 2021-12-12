@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, Query, Path
+from fastapi import APIRouter, Depends, Path
 from app.service.directors import DirectorService
-from app.dependencies import get_db
+from app.dependencies import get_db, Page
 from sqlalchemy.orm import Session
-from typing import Optional
 
 router = APIRouter(prefix="/directors", tags=["directors"])
 
@@ -10,17 +9,13 @@ router = APIRouter(prefix="/directors", tags=["directors"])
 @router.get("", summary="Получить всех режиссеров")
 @router.get("/", include_in_schema=False)
 async def directors_get_all(
-    page: Optional[int] = Query(
-        None,
-        title="Страница",
-        description="Укажите номер страницы для постраничного вывода",
-    ),
+    page=Depends(Page),
     db: Session = Depends(get_db),
 ):
     """
     Получить всех режиссеров
     """
-    return DirectorService(session=db).get_all(page=page)
+    return DirectorService(session=db).get_all(page=page.value)
 
 
 @router.get("/{pk}", summary="Получить режиссера по его ID")

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, Path
 from app.service.movies import MovieService
-from app.dependencies import get_db
+from app.dependencies import get_db, Page
 from sqlalchemy.orm import Session
 from typing import Optional
 
@@ -18,11 +18,7 @@ async def movies_get_all(
     year: Optional[int] = Query(
         None, title="Год выпуска", description="Укажите год выпуска фильма"
     ),
-    page: Optional[int] = Query(
-        None,
-        title="Страница",
-        description="Укажите номер страницы для постраничного вывода",
-    ),
+    page=Depends(Page),
     status: Optional[str] = Query(
         None,
         title="Статус",
@@ -41,9 +37,11 @@ async def movies_get_all(
     if year:
         query_d["year"] = year
     if query_d:
-        return MovieService(db).get_all_by_filter(query_d, page=page, state=status)
+        return MovieService(db).get_all_by_filter(
+            query_d, page=page.value, state=status
+        )
 
-    return MovieService(db).get_all(page=page, state=status)
+    return MovieService(db).get_all(page=page.value, state=status)
 
 
 @router.get("/{pk}", summary="Получить фильм по ID")

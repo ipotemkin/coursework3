@@ -1,7 +1,8 @@
 from app.dao.basic import BasicDAO
 from app.dao.model.movies import Movie, MovieBM, MovieBMSimple
 from app.constants import ITEMS_ON_PAGE
-from app.errors import NotFoundError
+
+# from app.errors import NotFoundError
 from sqlalchemy import desc
 
 
@@ -29,8 +30,8 @@ class MovieDAO(BasicDAO):
         else:
             objs = self.session.query(self.model).offset(start_at).limit(limit).all()
 
-        if raise_errors and not objs:
-            raise NotFoundError
+        # if raise_errors and not objs:
+        #     raise NotFoundError
         return [self.nested_schema.from_orm(obj).dict() for obj in objs]
         # return objs
 
@@ -71,7 +72,7 @@ class MovieDAO(BasicDAO):
             else:
                 res = self.model.query.offest(start_at).limit(limit).all()
 
-        if not res:
-            raise NotFoundError
+        # if not res:
+        #     raise NotFoundError
 
         return [self.nested_schema.from_orm(obj).dict() for obj in res]

@@ -23,8 +23,8 @@ class BasicDAO:
             start_at = (page - 1) * limit
 
         objs = self.session.query(self.model).offset(start_at).limit(limit).all()
-        if raise_errors and not objs:
-            raise NotFoundError
+        # if raise_errors and not objs:
+        #     raise NotFoundError
         return [self.nested_schema.from_orm(obj).dict() for obj in objs]
         # return objs
 
@@ -109,7 +109,7 @@ class BasicDAO:
         else:
             res = self.model.query.offest(start_at).limit(limit).all()
 
-        if not res:
-            raise NotFoundError
+        # if not res:
+        #     raise NotFoundError
 
         return [self.nested_schema.from_orm(obj).dict() for obj in res]

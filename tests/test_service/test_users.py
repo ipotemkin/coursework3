@@ -2,8 +2,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from app.dao.model.directors import Director, DirectorBM
-from app.dao.model.users import User, UserBM, UserInDB
+from app.dao.model.users import User, UserBM
 from app.errors import NotFoundError
 from app.service.users import UserService
 
@@ -72,10 +71,6 @@ class TestUserService:
         dao().get_all.return_value = temp
 
         assert UserService(db_session).get_all() == users_ld
-
-    def test_get_all_not_found(self, db_session):
-        with pytest.raises(NotFoundError):
-            assert UserService(db_session).get_all() == []
 
     def test_create_with_mock(self, db_session, dao):
         new_user = users_ld[0]

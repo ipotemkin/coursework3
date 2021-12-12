@@ -2,11 +2,12 @@ from app.setup_db import SessionLocal
 from fastapi.security import OAuth2PasswordBearer
 import jwt
 from app.constants import JWT_KEY, JWT_METHOD
-from fastapi import HTTPException, status, Depends
+from fastapi import HTTPException, status, Depends, Query
 from app.service.rtokens import RTokenService
 from sqlalchemy.orm import Session
 from app.service.users import UserService
 from app.dao.model.rtokens import TokenModel
+from typing import Optional
 
 
 # Dependency
@@ -69,3 +70,16 @@ def del_expired_tokens():
     db = SessionLocal()
     RTokenService(db).del_expired()
     db.close()
+
+
+class Page:
+    def __init__(
+        self,
+        page: Optional[int] = Query(
+            None,
+            title="Страница",
+            description="Укажите номер страницы для постраничного вывода (>0)",
+            gt=0,
+        ),
+    ):
+        self.value = page

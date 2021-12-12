@@ -41,14 +41,11 @@ movie = Movie(
 class TestFavoriteMovieService:
     @pytest.fixture
     def favorite_movie(self, db_session):
-        # obj = FavoriteMovie(id=1, user_id=1, movie_id=1)
-        # obj
         for i in fav_movies_ld:
             db_session.add(FavoriteMovie(**i))
 
         db_session.add(movie)
         db_session.flush()
-        # return obj
 
     @pytest.fixture
     def dao(self):
@@ -89,10 +86,6 @@ class TestFavoriteMovieService:
 
         assert FavoriteMovieService(db_session).get_all() == fav_movies_ld
 
-    def test_get_all_not_found(self, db_session):
-        with pytest.raises(NotFoundError):
-            assert FavoriteMovieService(db_session).get_all() == []
-
     def test_create_with_mock(self, db_session, dao):
         favorite_movie = FavoriteMovie(id=4, user_id=3, movie_id=5)
         dao().create.return_value = FavoriteMovieBM.from_orm(favorite_movie).dict()
@@ -115,9 +108,6 @@ class TestFavoriteMovieService:
         assert FavoriteMovieService(db_session).delete(1) is None
 
     def test_all_by_filter_with_mock(self, db_session, dao):
-        # temp = []
-        # for item in directors_ld:
-        #     temp.append(DirectorBM.from_orm(Director(**item)).dict())
         dao().get_all_by_filter.return_value = [{'id': 1, 'user_id': 1, 'movie_id': 1}]
 
         assert FavoriteMovieService(db_session).get_all_by_filter({'id': 1}) == [{'id': 1, 'user_id': 1, 'movie_id': 1}]
@@ -132,7 +122,3 @@ class TestFavoriteMovieService:
     def test_get_all_by_user_with_page(self, db_session, favorite_movie):
         assert FavoriteMovieService(db_session).get_all_by_user(user_id=2, page=1) == [
             MovieBMSimple.from_orm(movie).dict()]
-
-    # def test_get_all_not_found(self, db_session):
-    #     with pytest.raises(NotFoundError):
-    #         assert FavoriteMovieService(db_session).get_all() == []

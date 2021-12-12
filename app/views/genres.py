@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Depends, Query, Path
+from fastapi import APIRouter, Depends, Path
 from app.service.genres import GenreService
-from app.dependencies import get_db
+from app.dependencies import get_db, Page
 from sqlalchemy.orm import Session
-from typing import Optional
-
 
 router = APIRouter(prefix="/genres", tags=["genres"])
 
@@ -11,17 +9,13 @@ router = APIRouter(prefix="/genres", tags=["genres"])
 @router.get("", summary="Получить все жанры")
 @router.get("/", summary="Получить все жанры", include_in_schema=False)
 async def genres_get_all(
-    page: Optional[int] = Query(
-        None,
-        title="Страница",
-        description="Укажите номер страницы для постраничного вывода",
-    ),
+    page=Depends(Page),
     db: Session = Depends(get_db),
 ):
     """
     Получить все жанры
     """
-    return GenreService(db).get_all(page=page)
+    return GenreService(db).get_all(page=page.value)
 
 
 @router.get("/{pk}", summary="Получить жанр по его ID")

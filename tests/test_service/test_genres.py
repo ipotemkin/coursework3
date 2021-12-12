@@ -67,10 +67,6 @@ class TestGenreService:
 
         assert GenreService(db_session).get_all() == genres_ld
 
-    def test_get_all_not_found(self, db_session):
-        with pytest.raises(NotFoundError):
-            assert GenreService(db_session).get_all() == []
-
     def test_create_with_mock(self, db_session, dao):
         genre = Genre(id=4, name='Триллер')
         dao().create.return_value = GenreBM.from_orm(genre).dict()

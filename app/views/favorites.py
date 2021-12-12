@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, status, Response, Depends, Query, Path
+from fastapi import APIRouter, status, Response, Depends, Path
 
 from app.service.favorites import FavoriteMovieService
-from app.dependencies import get_db, get_current_user
-
-from typing import Optional
+from app.dependencies import get_db, get_current_user, Page
 
 router = APIRouter(prefix="/favorites", tags=["favorites"])
 
@@ -12,18 +10,14 @@ router = APIRouter(prefix="/favorites", tags=["favorites"])
 @router.get("/movies/", include_in_schema=False)
 @router.get("/movies", summary="Получить любимые фильмы текущего пользователя")
 async def favorites_get_all(
-    page: Optional[int] = Query(
-        None,
-        title="Страница",
-        description="Укажите номер страницы для постраничного вывода",
-    ),
+    page=Depends(Page),
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user),
 ):
     """
     Получить любимые фильмы текущего пользователя
     """
-    return FavoriteMovieService(db).get_all_by_user(user.get("id"), page=page)
+    return FavoriteMovieService(db).get_all_by_user(user.get("id"), page=page.value)
 
 
 @router.post(

@@ -23,20 +23,6 @@ directors_ld = [
 
 
 class TestDirectorService:
-    # engine = create_engine('sqlite:///:memory:', echo=True)
-
-    # @pytest.fixture(scope='session')
-    # def db_migration(self):
-    #     with self.engine.begin() as conn:
-    #         Base.metadata.drop_all(conn)
-    #         Base.metadata.create_all(conn)
-    #
-    # @pytest.fixture
-    # def db_session(self, db_migration):
-    #     with sessionmaker(autocommit=False, autoflush=False, bind=self.engine)() as db_session:
-    #         yield db_session
-    #         db_session.rollback()
-
     @pytest.fixture
     def director(self, db_session):
         obj = Director(id=1, name='Spillberg')
@@ -79,10 +65,6 @@ class TestDirectorService:
         dao().get_all.return_value = temp
 
         assert DirectorService(db_session).get_all() == directors_ld
-
-    def test_get_all_not_found(self, db_session):
-        with pytest.raises(NotFoundError):
-            assert DirectorService(db_session).get_all() == []
 
     def test_create_with_mock(self, db_session, dao):
         director = Director(id=4, name='Spillberg')
