@@ -442,21 +442,3 @@ class TestMoviesView:
         response = client.get("/movies/1000")
         assert response.status_code == HTTPStatus.NOT_FOUND
         assert response.json() == {'message': 'Not Found'}
-
-    # TODO: to make tests with tokens
-    # def test_update(self, new_movie, db_session):
-    #     response = client.patch("/movies/100", json=test_movie_request)
-    #     assert response.status_code == HTTPStatus.OK
-    #     assert response.json() == test_movie_response
-
-    # def test_create(self, db_session):
-    #     new_movie = {"id": 101, "name": "Новый жанр"}
-    #     response = client.post("/movies", json=new_movie)
-    #     assert response.status_code == HTTPStatus.CREATED
-    #     assert response.json() == {"id": 101, "name": "Новый жанр"}
-    #
-    # def test_delete(self, db_session):
-    #     response = client.delete("/movies/100")
-    #     assert response.status_code == HTTPStatus.OK
-    #     response = client.get("/movies/100")
-    #     assert response.status_code == HTTPStatus.NOT_FOUND

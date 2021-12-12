@@ -79,7 +79,7 @@ class BasicDAO:
             self.session.commit()
         except Exception:
             raise DatabaseError
-        # TODO
+        # TODO: to refactor with an exact error
         return self.get_one(uid)
 
     def delete(self, uid: int):

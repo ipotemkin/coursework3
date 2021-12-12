@@ -124,7 +124,7 @@ class UserService(BasicService):
     def update(self, new_obj: dict, uid: int):
         if ("password" in new_obj) and new_obj["password"] is not None:
             new_obj["password"] = self.get_hash(new_obj["password"])
-        return super().update(new_obj, uid)  # TODO
+        return super().update(new_obj, uid)  # TODO: to put uid at the first place
 
     def update_password(self, pk, old_password: str, new_password: str):
         user = self.dao.get_one(pk)
