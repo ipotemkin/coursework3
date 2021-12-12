@@ -39,7 +39,6 @@ tags_metadata = [
     },
 ]
 
-
 app = FastAPI(title='Movies API on FastAPI',
               description='Coursework Module 3 with SkyPro',
               version='1.0.0',
