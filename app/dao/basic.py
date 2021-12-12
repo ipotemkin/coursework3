@@ -1,4 +1,10 @@
-from app.errors import NotFoundError, NoContentError, BadRequestError, DatabaseError, ValidationError
+from app.errors import (
+    NotFoundError,
+    NoContentError,
+    BadRequestError,
+    DatabaseError,
+    ValidationError,
+)
 from app.constants import ITEMS_ON_PAGE
 
 
@@ -60,7 +66,7 @@ class BasicDAO:
         new_obj = {k: v for k, v in new_obj.items() if v is not None}
 
         # if exists id in new_obj should be equal to uid
-        if ('id' in new_obj) and (uid != new_obj['id']):
+        if ("id" in new_obj) and (uid != new_obj["id"]):
             raise BadRequestError
 
         # checking existence of the record
@@ -93,7 +99,13 @@ class BasicDAO:
             start_at = (page - 1) * limit
 
         if req:
-            res = self.session.query(self.model).filter_by(**req).limit(limit).offset(start_at).all()
+            res = (
+                self.session.query(self.model)
+                .filter_by(**req)
+                .limit(limit)
+                .offset(start_at)
+                .all()
+            )
         else:
             res = self.model.query.offest(start_at).limit(limit).all()
 

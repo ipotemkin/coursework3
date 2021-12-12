@@ -5,7 +5,7 @@ from app.dao.model.base import Base
 
 
 class Genre(Base):
-    __tablename__ = 'genre'
+    __tablename__ = "genre"
     id = Column(Integer, primary_key=True)
     name = Column(String)
     # movies = db.relationship('Movie', lazy='dynamic')

@@ -24,7 +24,7 @@ class FavoriteMovieService(BasicService):
         """
         if page is not None:
             start_at = (page - 1) * ITEMS_ON_PAGE
-            sql += f' limit {ITEMS_ON_PAGE} offset {start_at}'
+            sql += f" limit {ITEMS_ON_PAGE} offset {start_at}"
         res = self.dao.session.execute(sql).all()
         # if not (res := self.dao.session.execute(sql).all()):
         #     raise NotFoundError

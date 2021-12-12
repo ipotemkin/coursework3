@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String
 
 
 class RToken(Base):
-    __tablename__ = 'r_token'
+    __tablename__ = "r_token"
     id = Column(Integer, primary_key=True)
     token = Column(String, nullable=False, unique=True)
 

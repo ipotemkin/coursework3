@@ -5,7 +5,7 @@ from app.dao.model.base import Base
 
 
 class Director(Base):
-    __tablename__ = 'director'
+    __tablename__ = "director"
     id = Column(Integer, primary_key=True)
     name = Column(String)
     # movies = db.relationship('Movie', lazy='dynamic')

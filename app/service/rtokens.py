@@ -12,7 +12,7 @@ class RTokenService(BasicService):
         tokens = self.dao.get_all(raise_errors=False)
         for token in tokens:
             try:
-                jwt.decode(token['token'], JWT_KEY, [JWT_METHOD])
+                jwt.decode(token["token"], JWT_KEY, [JWT_METHOD])
             except Exception as e:
                 print(f"Token with ID={token['id']} status {e}")
-                self.dao.delete(token['id'])
+                self.dao.delete(token["id"])

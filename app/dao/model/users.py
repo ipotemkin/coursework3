@@ -5,18 +5,20 @@ from app.dao.model.base import Base
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = "user"
     id = Column(Integer, primary_key=True)
     password = Column(String)  # a hashed password
     role = Column(String, default="user")  # to be deprecated
     email = Column(String, unique=True, index=True, nullable=False)
     name = Column(String(100))  # , nullable=False)
     surname = Column(String(100))  # , nullable=False)
-    favorite_genre = Column(Integer, ForeignKey('genre.id'))
+    favorite_genre = Column(Integer, ForeignKey("genre.id"))
 
     def __repr__(self):
-        return f"<User: id={self.id}, email={self.username}, role={self.role}, name={self.name}" \
-               f", surname={self.surname}>"
+        return (
+            f"<User: id={self.id}, email={self.username}, role={self.role}, name={self.name}"
+            f", surname={self.surname}>"
+        )
 
 
 class UserBase(BaseModel):

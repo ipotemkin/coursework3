@@ -20,7 +20,7 @@ def get_db():
         db.close()
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login_oauth2')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login_oauth2")
 
 
 def jwt_decode(token: str) -> TokenModel:
@@ -49,7 +49,7 @@ def valid_admin_token(token: str = Depends(oauth2_scheme)):
     use it as dependency when admin authorization required
     """
     role = jwt_decode(token).role
-    if role != 'admin':
+    if role != "admin":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Admin Role Required",
@@ -58,9 +58,11 @@ def valid_admin_token(token: str = Depends(oauth2_scheme)):
     return True
 
 
-def get_current_user(token: TokenModel = Depends(valid_token), db: Session = Depends(get_db)):
+def get_current_user(
+    token: TokenModel = Depends(valid_token), db: Session = Depends(get_db)
+):
     # return UserService(db).get_all_by_filter({'email': token.get('email')})[0]
-    return UserService(db).get_all_by_filter({'email': token.email})[0]
+    return UserService(db).get_all_by_filter({"email": token.email})[0]
 
 
 def del_expired_tokens():

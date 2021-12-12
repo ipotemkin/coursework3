@@ -7,4 +7,4 @@ class DirectorDAO(BasicDAO):
         super().__init__(session, model, schema)
 
     def __repr__(self):
-        return f'<DirectorDAO (model={self.model})>'
+        return f"<DirectorDAO (model={self.model})>"

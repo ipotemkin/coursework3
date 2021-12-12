@@ -6,7 +6,9 @@ from sqlalchemy import desc
 
 
 class MovieDAO(BasicDAO):
-    def __init__(self, session, model=Movie, schema=MovieBMSimple, nested_schema=MovieBM):
+    def __init__(
+        self, session, model=Movie, schema=MovieBMSimple, nested_schema=MovieBM
+    ):
         super().__init__(session, model, schema, nested_schema)
 
     def get_all(self, raise_errors=True, page=None, limit=ITEMS_ON_PAGE, state=None):
@@ -16,8 +18,14 @@ class MovieDAO(BasicDAO):
         else:
             start_at = (page - 1) * limit
 
-        if state == 'new':
-            objs = self.session.query(self.model).order_by(desc('year')).offset(start_at).limit(limit).all()
+        if state == "new":
+            objs = (
+                self.session.query(self.model)
+                .order_by(desc("year"))
+                .offset(start_at)
+                .limit(limit)
+                .all()
+            )
         else:
             objs = self.session.query(self.model).offset(start_at).limit(limit).all()
 
@@ -33,16 +41,33 @@ class MovieDAO(BasicDAO):
         else:
             start_at = (page - 1) * limit
 
-        if state == 'new':
+        if state == "new":
             if req:
-                res = self.session.query(self.model).filter_by(**req)\
-                    .order_by(desc('year')).limit(limit).offset(start_at).all()
+                res = (
+                    self.session.query(self.model)
+                    .filter_by(**req)
+                    .order_by(desc("year"))
+                    .limit(limit)
+                    .offset(start_at)
+                    .all()
+                )
             else:
-                res = self.model.query.order_by(desc('year')).offest(start_at).limit(limit).all()
+                res = (
+                    self.model.query.order_by(desc("year"))
+                    .offest(start_at)
+                    .limit(limit)
+                    .all()
+                )
 
         else:
             if req:
-                res = self.session.query(self.model).filter_by(**req).limit(limit).offset(start_at).all()
+                res = (
+                    self.session.query(self.model)
+                    .filter_by(**req)
+                    .limit(limit)
+                    .offset(start_at)
+                    .all()
+                )
             else:
                 res = self.model.query.offest(start_at).limit(limit).all()
 

@@ -8,17 +8,17 @@ from app.dao.model.base import Base
 
 
 class Movie(Base):
-    __tablename__ = 'movie'
+    __tablename__ = "movie"
     id = Column(Integer, primary_key=True)
     description = Column(String, nullable=False)
-    director_id = Column(Integer, ForeignKey('director.id'), nullable=False)
-    genre_id = Column(Integer, ForeignKey('genre.id'), nullable=False)
+    director_id = Column(Integer, ForeignKey("director.id"), nullable=False)
+    genre_id = Column(Integer, ForeignKey("genre.id"), nullable=False)
     rating = Column(Float, default=0.0)
     title = Column(String, nullable=False)
     trailer = Column(String, default="#")
     year = Column(Integer, nullable=False)
-    director: RelationshipProperty = relationship('Director')
-    genre: RelationshipProperty = relationship('Genre')
+    director: RelationshipProperty = relationship("Director")
+    genre: RelationshipProperty = relationship("Genre")
 
     def __repr__(self):
         return f"<Movie {self.title}>"
