@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy import Column, Integer, ForeignKey
 from app.dao.model.base import Base
+import ujson
 
 
 class FavoriteMovie(Base):
@@ -20,6 +21,7 @@ class FavoriteMovieBase(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 class FavoriteMovieBM(FavoriteMovieBase):
@@ -32,3 +34,4 @@ class FavoriteMovieUpdateBM(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads

@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from sqlalchemy import Column, Integer, String, ForeignKey
 from app.dao.model.base import Base
+import ujson
 
 
 class User(Base):
@@ -31,11 +32,11 @@ class UserBase(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 class UserBM(UserBase):
     id: Optional[int]
-    # favorite_genre: Optional[GenreBM]
 
 
 class UserInDB(UserBase):
@@ -52,3 +53,4 @@ class UserUpdateBM(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads

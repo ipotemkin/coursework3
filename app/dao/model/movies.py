@@ -5,6 +5,7 @@ from app.dao.model.directors import DirectorBM
 from app.dao.model.genres import GenreBM
 from sqlalchemy.orm import relationship, RelationshipProperty
 from app.dao.model.base import Base
+import ujson
 
 
 class Movie(Base):
@@ -35,6 +36,7 @@ class MovieUpdateBM(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 class MovieBMSimple(MovieUpdateBM):

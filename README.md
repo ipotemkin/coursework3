@@ -32,13 +32,16 @@ To build up a database with these testing data just run create_data.py
 Dependencies
 -------
 
-1. Flask
-2. Flask-SQLAlchemy
-3. PyDantic
-4. PyJWT
-5. FastAPI
-6. uvicorn
-7. fastapi_utils
-8. python-multipart
-9. email-validator
-10. python-dotenv
+This projects uses an ultra-fast library ujson to read jsons
+
+1. SQLAlchemy
+2. PyDantic
+3. PyJWT
+4. FastAPI
+5. uvicorn
+6. fastapi_utils
+7. python-multipart
+8. email-validator
+9. python-dotenv
+10. ujson
+11. types-ujson

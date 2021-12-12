@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy import Column, Integer, String
 from app.dao.model.base import Base
+import ujson
 
 
 class Director(Base):
@@ -17,6 +18,7 @@ class DirectorBM(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 class DirectorUpdateBM(BaseModel):
@@ -24,3 +26,4 @@ class DirectorUpdateBM(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads

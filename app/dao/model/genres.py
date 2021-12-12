@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy import Column, Integer, String
 from app.dao.model.base import Base
+import ujson
 
 
 class Genre(Base):
@@ -17,6 +18,7 @@ class GenreBM(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 class GenreUpdateBM(BaseModel):
@@ -24,3 +26,4 @@ class GenreUpdateBM(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads

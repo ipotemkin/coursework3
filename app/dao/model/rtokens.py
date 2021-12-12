@@ -2,6 +2,7 @@ from app.dao.model.base import Base
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from sqlalchemy import Column, Integer, String
+import ujson
 
 
 class RToken(Base):
@@ -24,6 +25,7 @@ class TokenRequest(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 # a model for token response
@@ -34,12 +36,17 @@ class TokenResponse(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 # a model to refresh tokens
 class RefreshTokensRequest(BaseModel):
     access_token: str
     refresh_token: str
+
+    class Config:
+        orm_mode = True
+        json_loads = ujson.loads
 
 
 # a user model to make a token
@@ -49,6 +56,7 @@ class UserForTokenModel(BaseModel):
 
     class Config:
         orm_mode = True
+        json_loads = ujson.loads
 
 
 # a full model for token
