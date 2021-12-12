@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from app.dao.model.directors import DirectorBM
 from app.dao.model.genres import GenreBM
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, RelationshipProperty
 from app.dao.model.base import Base
 
 
@@ -17,8 +17,8 @@ class Movie(Base):
     title = Column(String, nullable=False)
     trailer = Column(String, default="#")
     year = Column(Integer, nullable=False)
-    director = relationship('Director')
-    genre = relationship('Genre')
+    director: RelationshipProperty = relationship('Director')
+    genre: RelationshipProperty = relationship('Genre')
 
     def __repr__(self):
         return f"<Movie {self.title}>"

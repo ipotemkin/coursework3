@@ -4,6 +4,7 @@ from app.service.users import UserService
 from app.dependencies import get_db, valid_token
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from app.dao.model.rtokens import TokenModel
 
 router = APIRouter(prefix='/user', tags=['users'])
 
@@ -18,11 +19,11 @@ class PasswordChange(BaseModel):
 
 @router.get('', summary='Получить текущего пользователя')
 @router.get('/', include_in_schema=False)
-async def users_current_user(db: Session = Depends(get_db), decoded_token=Depends(valid_token)):
+async def users_current_user(db: Session = Depends(get_db), decoded_token: TokenModel = Depends(valid_token)):
     """
     Получить текущего пользователя
     """
-    pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    pk = UserService(db).get_all_by_filter({'email': decoded_token.email})[0].get('id')
     res = UserService(session=db).get_one(pk)
     return res
 
@@ -56,7 +57,7 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
               )
 async def current_user_update(user: UserUpdateBM,
                               db: Session = Depends(get_db),
-                              decoded_token=Depends(valid_token)
+                              decoded_token: TokenModel = Depends(valid_token)
                               ):
     """
     Изменить запись текущего пользователя:
@@ -68,7 +69,7 @@ async def current_user_update(user: UserUpdateBM,
     - **role**: изменить роль пользователя ('user' или 'admin')
     - **favorite_genre**: изменить ссылку на любимый жанр (=ID жанра)
     """
-    pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    pk = UserService(db).get_all_by_filter({'email': decoded_token.email})[0].get('id')
     return UserService(db).update(user.dict(), pk)
 
 
@@ -77,12 +78,12 @@ async def current_user_update(user: UserUpdateBM,
             summary='Обновить пароль пользователя с указанным ID',
             )
 async def users_update_password(body: PasswordChange, db: Session = Depends(get_db),
-                                decoded_token=Depends(valid_token)):
+                                decoded_token: TokenModel = Depends(valid_token)):
     """
     Обновить пароль пользователя с указанным ID:
 
     - **password_1**: старый пароль пользователя
     - **password_2**: новый пароль пользователя
     """
-    pk = UserService(db).get_all_by_filter({'email': decoded_token.get('email')})[0].get('id')
+    pk = UserService(db).get_all_by_filter({'email': decoded_token.email})[0].get('id')
     return UserService(db).update_password(pk, body.password_1, body.password_2)

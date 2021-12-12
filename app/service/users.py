@@ -36,7 +36,7 @@ class UserService(BasicService):
     #     return access_token
 
     @staticmethod
-    def check_access_token(access_token: str):
+    def check_access_token(access_token: str) -> TokenModel:
         try:
             data = jwt.decode(access_token, JWT_KEY, [JWT_METHOD])
         except Exception as e:

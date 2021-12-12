@@ -1,12 +1,3 @@
-from dotenv import load_dotenv
-# load_dotenv()
-# import os
-# print('PWD_HASH_SALT=', os.getenv('PWD_HASH_SALT'))
-# PWD_HASH_SALT=b'the highest secret possible'
-# JWT_KEY='SkyPro2021!'
-# from app.constants import PWD_HASH_SALT
-# print(PWD_HASH_SALT)
-
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 

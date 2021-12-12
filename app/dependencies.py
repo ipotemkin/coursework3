@@ -23,7 +23,7 @@ def get_db():
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login_oauth2')
 
 
-def jwt_decode(token: str):
+def jwt_decode(token: str) -> TokenModel:
     try:
         decoded_jwt = jwt.decode(token, JWT_KEY, [JWT_METHOD])
     except Exception as e:
@@ -37,7 +37,7 @@ def jwt_decode(token: str):
         # return decoded_jwt
 
 
-def valid_token(token: str = Depends(oauth2_scheme)):
+def valid_token(token: str = Depends(oauth2_scheme)) -> TokenModel:
     """
     use it as dependency when authorization required
     """
@@ -58,7 +58,7 @@ def valid_admin_token(token: str = Depends(oauth2_scheme)):
     return True
 
 
-def get_current_user(token=Depends(valid_token), db: Session = Depends(get_db)):
+def get_current_user(token: TokenModel = Depends(valid_token), db: Session = Depends(get_db)):
     # return UserService(db).get_all_by_filter({'email': token.get('email')})[0]
     return UserService(db).get_all_by_filter({'email': token.email})[0]
 
