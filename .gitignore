@@ -13,3 +13,4 @@ tests/.coverage
 alembic.ini
 alembic
 .github
+.env
