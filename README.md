@@ -38,6 +38,7 @@ Dependencies
 4. PyJWT
 5. FastAPI
 6. uvicorn
-8. fastapi_utils
-9. python-multipart
-10. email-validator
+7. fastapi_utils
+8. python-multipart
+9. email-validator
+10. python-dotenv
