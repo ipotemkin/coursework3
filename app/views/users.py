@@ -65,7 +65,6 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
 )
 async def current_user_update(
     user: UserUpdateBM,
-    # user: UserBM,
     db: Session = Depends(get_db),
     decoded_token: TokenModel = Depends(valid_token),
 ):

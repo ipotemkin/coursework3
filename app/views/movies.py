@@ -8,6 +8,7 @@ router = APIRouter(prefix="/movies", tags=["movies"])
 
 
 @router.get("", summary="Получить все фильмы")
+@router.get("/", include_in_schema=False)
 async def movies_get_all(
     director_id: Optional[int] = Query(
         None, title="ID режиссера", description="Укажите ID режиссера"
