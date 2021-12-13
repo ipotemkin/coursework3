@@ -433,6 +433,36 @@ class TestMoviesView:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == test_movies_response[:ITEMS_ON_PAGE]
 
+    def test_many_with_director_id(self):
+        response = client.get("/movies/?director_id=1")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == test_movies_response[0:1]
+
+    def test_many_with_genre_id(self):
+        response = client.get("/movies/?genre_id=6")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == test_movies_response[14:15]
+
+    def test_many_with_year(self):
+        response = client.get("/movies/?year=1978")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == test_movies_response[2:3]
+
+    def test_many_with_year_not_found(self):
+        response = client.get("/movies/?year=2030")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == []
+
+    def test_many_with_director_id_genre_id_year(self):
+        response = client.get("/movies/?director_id=2&genre_id=17&year=2012")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == test_movies_response[3:4]
+
+    def test_many_with_director_id_genre_id_year_not_found(self):
+        response = client.get("/movies/?director_id=2&genre_id=17&year=2030")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == []
+
     def test_one(self, db_session):
         response = client.get("/movies/1")
         assert response.status_code == HTTPStatus.OK
