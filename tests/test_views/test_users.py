@@ -70,6 +70,8 @@ test_users_response = [
     },
 ]
 
+ACCESS_TOKEN = ""
+
 
 class TestMoviesView:
     @pytest.fixture
@@ -91,7 +93,9 @@ class TestMoviesView:
             "/auth/login",
             json=request_data,
         )
-        return response.json()['access_token']
+        global ACCESS_TOKEN
+        ACCESS_TOKEN = response.json()['access_token']
+        return ACCESS_TOKEN
 
     # @pytest.fixture
     # def new_user(self, db_session):
@@ -111,27 +115,24 @@ class TestMoviesView:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == test_users_response[0]
 
-    # TODO
-    # def test_update_current_user(self, db_session):
-    #     request_data = {
-    #         "email": "test@example.com",
-    #         "password": "test",
-    #     }
-    #
-    #     response = client.post(
-    #         "/auth/login",
-    #         json=request_data,
-    #     )
-    #     token = response.json()['access_token']
-    #
-    #     response = client.patch(
-    #         "/user",
-    #         json={"name": "Bob"},
-    #         headers={"Authorization": f"Bearer {token}"}
-    #     )
-    #     test_users_response[0]["name"] = "Bob"
-    #     assert response.status_code == HTTPStatus.OK
-    #     assert response.json() == test_users_response[0]
+    def test_update_current_user(self, db_session):
+        response = client.patch(
+            "/user",
+            json={"name": "Bob"},
+            headers={"Authorization": f"Bearer {ACCESS_TOKEN}"}
+        )
+        test_users_response[0]["name"] = "Bob"
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == test_users_response[0]
+
+    def test_update_user_password(self, db_session):
+        response = client.put(
+            "/user/password",
+            json={"password_1": "test", "password_2": "test2"},
+            headers={"Authorization": f"Bearer {ACCESS_TOKEN}"}
+        )
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() is None
 
     # def test_many_with_page(self):
     #     response = client.get("/users/?page=1")
