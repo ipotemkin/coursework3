@@ -65,6 +65,7 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
 )
 async def current_user_update(
     user: UserUpdateBM,
+    # user: UserBM,
     db: Session = Depends(get_db),
     decoded_token: TokenModel = Depends(valid_token),
 ):
@@ -79,7 +80,7 @@ async def current_user_update(
     - **favorite_genre**: изменить ссылку на любимый жанр (=ID жанра)
     """
     pk = UserService(db).get_all_by_filter({"email": decoded_token.email})[0].get("id")
-    return UserService(db).update(user.dict(), pk)
+    return UserService(db).update(user.dict(exclude_unset=True), pk)
 
 
 @router.put(

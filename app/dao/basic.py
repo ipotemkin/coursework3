@@ -63,7 +63,7 @@ class BasicDAO:
             raise NoContentError
 
         # excluding None items
-        new_obj = {k: v for k, v in new_obj.items() if v is not None}
+        # new_obj = {k: v for k, v in new_obj.items() if v is not None}
 
         # if exists id in new_obj should be equal to uid
         if ("id" in new_obj) and (uid != new_obj["id"]):
