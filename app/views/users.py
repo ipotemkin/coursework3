@@ -30,6 +30,19 @@ async def users_current_user(
     return res
 
 
+@router.get("/all", summary="Получить всех пользователей")
+@router.get("/all/", include_in_schema=False)
+async def users_get_all(
+    db: Session = Depends(get_db)
+):
+    """
+    Получить всех пользователей
+    """
+    # pk = UserService(db).get_all_by_filter({"email": decoded_token.email})[0].get("id")
+    res = UserService(session=db).get_all()
+    return res
+
+
 @router.post(
     "",
     status_code=status.HTTP_201_CREATED,

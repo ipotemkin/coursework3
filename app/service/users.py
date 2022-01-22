@@ -127,8 +127,9 @@ class UserService(BasicService):
         return super().update(new_obj, uid)  # TODO: to put uid at the first place
 
     def update_password(self, pk, old_password: str, new_password: str):
-        user = self.dao.get_one(pk)
-        if not self.check_password_with_hash(old_password, user.get("password")):
+        # user = self.dao.get_one(pk)
+        user_passwd = self.dao.get_passwd(pk)
+        if not self.check_password_with_hash(old_password, user_passwd):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Incorrect password",
