@@ -3,7 +3,7 @@ from app.dao.model.users import UserBM, UserUpdateBM
 from app.service.users import UserService
 from app.dependencies import get_db, valid_token
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from app.dao.model.rtokens import TokenModel
 
 router = APIRouter(prefix="/user", tags=["users"])
@@ -63,9 +63,10 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
     """
     new_obj = UserService(db).create(user.dict())
     response.headers["Location"] = f"{router.prefix}/{new_obj.id}"
-    return new_obj
+    return UserBM.from_orm(new_obj).dict(exclude={'password'})
 
 
+# @validator('user', pre=False, always=True)
 @router.patch(
     "",
     # status_code=status.HTTP_204_NO_CONTENT,
@@ -87,7 +88,7 @@ async def current_user_update(
     - **email**: изменить email пользователя
     - **password**: изменить пароль пользователя
     - **name**: изменить имя пользователя
-    - **surname**: изменить фамилия пользователя
+    - **surname**: изменить фамилию пользователя
     - **role**: изменить роль пользователя ('user' или 'admin')
     - **favorite_genre**: изменить ссылку на любимый жанр (=ID жанра)
     """

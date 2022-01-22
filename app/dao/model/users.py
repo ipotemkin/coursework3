@@ -44,7 +44,7 @@ class UserInDB(UserBase):
 
 
 class UserUpdateBM(BaseModel):
-    password: Optional[str]
+    # password: Optional[str]
     role: Optional[str]
     email: Optional[EmailStr]
     name: Optional[str]
