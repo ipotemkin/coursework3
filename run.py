@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import JSONResponse
 
 from uvicorn import run
@@ -11,6 +11,13 @@ from fastapi_utils.tasks import repeat_every
 import datetime
 
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.constants import RATE_LIMIT_PER_SECOND
+
+# rate limitation
+import aioredis
+from fastapi_limiter import FastAPILimiter
+from fastapi_limiter.depends import RateLimiter
 
 tags_metadata = [
     {
@@ -47,7 +54,9 @@ app = FastAPI(title='Movies API on FastAPI',
                   "email": "ipotemkin@rambler.ru",
               },
               openapi_tags=tags_metadata,
-              docs_url='/')
+              docs_url='/',
+              dependencies=[Depends(RateLimiter(times=RATE_LIMIT_PER_SECOND, seconds=1))]
+              )
 
 origins = [
     # "http://domainname.com",
@@ -82,8 +91,15 @@ def del_expired_tokens_repeat():
 
 
 @app.on_event("startup")
-def on_startup():
-    pass
+async def on_startup():
+    redis = aioredis.from_url("redis://localhost")  # , encoding="utf-8", decode_responses=True)
+    # create_redis_pool("redis://localhost")  # ths string from the manual doesn't work
+    await FastAPILimiter.init(redis)
+
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    await FastAPILimiter.close()
 
 
 # exception handlers
