@@ -32,15 +32,11 @@ async def users_current_user(
 
 @router.get("/all", summary="Получить всех пользователей")
 @router.get("/all/", include_in_schema=False)
-async def users_get_all(
-    db: Session = Depends(get_db)
-):
+async def users_get_all(db: Session = Depends(get_db)):
     """
     Получить всех пользователей
     """
-    # pk = UserService(db).get_all_by_filter({"email": decoded_token.email})[0].get("id")
-    res = UserService(session=db).get_all()
-    return res
+    return UserService(session=db).get_all()
 
 
 # @router.post(
@@ -106,7 +102,7 @@ async def users_update_password(
     decoded_token: TokenModel = Depends(valid_token),
 ):
     """
-    Обновить пароль пользователя с указанным ID:
+    Обновить пароль текущего пользователя:
 
     - **password_1**: старый пароль пользователя
     - **password_2**: новый пароль пользователя

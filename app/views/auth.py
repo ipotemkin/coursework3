@@ -112,4 +112,4 @@ async def users_post(user: UserBM, response: Response, db: Session = Depends(get
     new_obj = UserService(db).create(user.dict())
     response.headers["Location"] = f"{router.prefix}/{new_obj.id}"
     # return new_obj
-    return UserBM.from_orm(new_obj).dict(exclude={'password'})
+    return UserBM.from_orm(new_obj).dict(exclude={"password"})

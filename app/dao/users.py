@@ -18,7 +18,9 @@ class UserDAO(BasicDAO):
         objs = self.session.query(self.model).offset(start_at).limit(limit).all()
         # if raise_errors and not objs:
         #     raise NotFoundError
-        return [self.nested_schema.from_orm(obj).dict(exclude={"password"}) for obj in objs]
+        return [
+            self.nested_schema.from_orm(obj).dict(exclude={"password"}) for obj in objs
+        ]
 
     def get_one(self, uid: int):
         if not (obj := self.session.query(self.model).get(uid)):
