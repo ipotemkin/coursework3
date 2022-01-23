@@ -91,24 +91,25 @@ async def refresh_tokens(body: RefreshTokensRequest, db: Session = Depends(get_d
 
 
 # TODO Remove this endpoint
-# @router.post(
-#     "/register",
-#     status_code=status.HTTP_201_CREATED,
-#     summary="Добавить пользователя",
-#     response_description="The created item",
-# )
-# async def users_post(user: UserBM, response: Response, db: Session = Depends(get_db)):
-#     """
-#     Добавить пользователя:
-#
-#     - **id**: ID пользователя - целое число (необязательный параметр)
-#     - **email**: email пользователя - используется для его идентификации (обязательный параметр)
-#     - **password**: пароль пользователя
-#     - **name**: имя пользователя
-#     - **surname**: фамилия пользователя
-#     - **role**: роль пользователя ('user' или 'admin')
-#     - **favorite_genre**: ссылка на любимый жанр (=ID жанра)
-#     """
-#     new_obj = UserService(db).create(user.dict())
-#     response.headers["Location"] = f"{router.prefix}/{new_obj.id}"
-#     return new_obj
+@router.post(
+    "/register",
+    status_code=status.HTTP_201_CREATED,
+    summary="Добавить пользователя",
+    response_description="The created item",
+)
+async def users_post(user: UserBM, response: Response, db: Session = Depends(get_db)):
+    """
+    Добавить пользователя:
+
+    - **id**: ID пользователя - целое число (необязательный параметр)
+    - **email**: email пользователя - используется для его идентификации (обязательный параметр)
+    - **password**: пароль пользователя
+    - **name**: имя пользователя
+    - **surname**: фамилия пользователя
+    - **role**: роль пользователя ('user' или 'admin')
+    - **favorite_genre**: ссылка на любимый жанр (=ID жанра)
+    """
+    new_obj = UserService(db).create(user.dict())
+    response.headers["Location"] = f"{router.prefix}/{new_obj.id}"
+    # return new_obj
+    return UserBM.from_orm(new_obj).dict(exclude={'password'})
