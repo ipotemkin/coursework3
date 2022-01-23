@@ -52,7 +52,7 @@ test_users = [
 test_users_response = [
     {
         "email": "test@example.com",
-        "password": UserService(db_session).get_hash("test"),
+        # "password": UserService(db_session).get_hash("test"),
         "role": "user",
         "name": "James",
         "surname": "Fern",
@@ -61,7 +61,7 @@ test_users_response = [
     },
     {
         "email": "test2@example.com",
-        "password": UserService(db_session).get_hash("test2"),
+        # "password": UserService(db_session).get_hash("test2"),
         "role": "user",
         "name": "Mary",
         "surname": "Smith",

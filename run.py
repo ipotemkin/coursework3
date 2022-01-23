@@ -14,6 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.constants import RATE_LIMIT_PER_SECOND
 
+from app.setup_db import TESTING
+
 # rate limitation
 import aioredis
 from fastapi_limiter import FastAPILimiter
@@ -55,7 +57,7 @@ app = FastAPI(title='Movies API on FastAPI',
               },
               openapi_tags=tags_metadata,
               docs_url='/',
-              dependencies=[Depends(RateLimiter(times=RATE_LIMIT_PER_SECOND, seconds=1))]
+              dependencies=[Depends(RateLimiter(times=RATE_LIMIT_PER_SECOND, seconds=1))] if not TESTING else None
               )
 
 origins = [

@@ -51,13 +51,13 @@ class TestUserService:
             yield mock
 
     def test_get_one(self, db_session, user):
-        assert UserService(db_session).get_one(user.id) == UserBM.from_orm(user).dict()
+        assert UserService(db_session).get_one(user.id) == UserBM.from_orm(user).dict(exclude={"password"})
 
     def test_get_one_with_mock(self, db_session, dao):
         user = User(**users_ld[0])
-        dao().get_one.return_value = UserBM.from_orm(user).dict()
+        dao().get_one.return_value = UserBM.from_orm(user).dict(exclude={"password"})
 
-        assert UserService(db_session).get_one(user.id) == UserBM.from_orm(user).dict()
+        assert UserService(db_session).get_one(user.id) == UserBM.from_orm(user).dict(exclude={"password"})
         dao().get_one.assert_called_once_with(1)
 
     def test_get_one_not_found(self, db_session):
