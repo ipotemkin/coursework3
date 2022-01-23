@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Extra
 from typing import Optional
 from sqlalchemy import Column, Integer, String, ForeignKey
 from app.dao.model.base import Base
@@ -54,3 +54,4 @@ class UserUpdateBM(BaseModel):
     class Config:
         orm_mode = True
         json_loads = ujson.loads
+        extra = Extra.forbid
