@@ -34,6 +34,9 @@ Dependencies
 
 This projects uses an ultra-fast library ujson to read jsons
 
+__Attention!__ You will also need a redis server up to check rate limiting.
+If you don't want to setup the redis or implement the rate limiting just put env variable NO_RATE_LIMIT=TRUE
+
 1. SQLAlchemy
 2. PyDantic
 3. PyJWT
@@ -45,3 +48,5 @@ This projects uses an ultra-fast library ujson to read jsons
 9. python-dotenv
 10. ujson
 11. types-ujson
+12. fastapi-limiter
+13. aioredis

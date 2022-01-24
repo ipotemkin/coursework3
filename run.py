@@ -12,7 +12,7 @@ import datetime
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.constants import RATE_LIMIT_PER_SECOND
+from app.constants import RATE_LIMIT_PER_SECOND, NO_RATE_LIMIT
 
 from app.setup_db import TESTING
 
@@ -57,7 +57,7 @@ app = FastAPI(title='Movies API on FastAPI',
               },
               openapi_tags=tags_metadata,
               docs_url='/',
-              dependencies=[Depends(RateLimiter(times=RATE_LIMIT_PER_SECOND, seconds=1))] if not TESTING else None
+              dependencies=[Depends(RateLimiter(times=RATE_LIMIT_PER_SECOND, seconds=1))] if not TESTING and not NO_RATE_LIMIT else None
               )
 
 origins = [
@@ -94,14 +94,17 @@ def del_expired_tokens_repeat():
 
 @app.on_event("startup")
 async def on_startup():
-    redis = aioredis.from_url("redis://localhost")  # , encoding="utf-8", decode_responses=True)
-    # create_redis_pool("redis://localhost")  # ths string from the manual doesn't work
-    await FastAPILimiter.init(redis)
+    if not NO_RATE_LIMIT:
+        redis = aioredis.from_url("redis://localhost")  # , encoding="utf-8", decode_responses=True)
+        # create_redis_pool("redis://localhost")  # ths string from the manual doesn't work
+        await FastAPILimiter.init(redis)
+    print(NO_RATE_LIMIT)
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
-    await FastAPILimiter.close()
+    if not NO_RATE_LIMIT:
+        await FastAPILimiter.close()
 
 
 # exception handlers
