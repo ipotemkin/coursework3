@@ -3,8 +3,13 @@ from app.service.movies import MovieService
 from app.dependencies import get_db, Page
 from sqlalchemy.orm import Session
 from typing import Optional
+from enum import Enum
 
 router = APIRouter(prefix="/movies", tags=["movies"])
+
+
+class IsNew(str, Enum):
+    new = "new"
 
 
 @router.get("", summary="Получить все фильмы")
@@ -20,7 +25,7 @@ async def movies_get_all(
         None, title="Год выпуска", description="Укажите год выпуска фильма"
     ),
     page=Depends(Page),
-    status: Optional[str] = Query(
+    status: Optional[IsNew] = Query(
         None,
         title="Статус",
         description="Укажите new, чтобы вывести сначала новые фильмы",
